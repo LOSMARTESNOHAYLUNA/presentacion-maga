@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Consultoría de IA · Los Martes No Hay Luna</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,300;1,700;1,900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body,*{cursor:none!important}
+:root{
+  --bg:#02010c;--bg2:#06031a;--bg3:#0c0728;
+  --p:#6d28d9;--plt:#8b5cf6;--pdk:#3b0764;
+  --lime:#F59E0B;--limel:#FCD34D;
+  --loss:#ff2d6b;--loss2:rgba(255,45,107,.12);
+  --fee:#c4a8ff;--fee2:rgba(196,168,255,.1);
+  --tx:#f5f0ff;--txd:rgba(245,240,255,.78);--txm:rgba(245,240,255,.45);
+  --rule:rgba(245,240,255,.07);
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);font-family:'Poppins',sans-serif;color:var(--tx);cursor:default}
+.pres{position:relative;width:100vw;height:100vh;overflow:hidden}
+
+/* ── GRAIN OVERLAY ─── */
+#grain{position:fixed;inset:0;pointer-events:none;z-index:9000;opacity:.03}
+
+/* ── SLIDES ─── */
+.s{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  justify-content:center;padding:6vh 7vw;
+  opacity:0;transform:scale(.97) translateX(20px);
+  transition:opacity .4s cubic-bezier(.4,0,.2,1),transform .4s cubic-bezier(.4,0,.2,1);
+  pointer-events:none;overflow:hidden;
+}
+.s.active{opacity:1;transform:scale(1) translateX(0);pointer-events:all}
+.s.out{opacity:0;transform:scale(1.03) translateX(-20px)}
+
+/* ── COMMON TYPO ─── */
+.eyebrow{font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:var(--lime);display:flex;align-items:center;gap:.7rem;margin-bottom:1.2rem}
+.eyebrow::before{content:'';width:18px;height:2px;background:var(--lime);flex-shrink:0}
+.tagline{font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:rgba(245,240,255,.65);border:1px solid var(--rule);padding:.35rem .9rem;display:inline-block}
+
+/* ── NAV ─── */
+.nav{position:fixed;bottom:4vh;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:1.2rem;z-index:100}
+.nbtn{width:40px;height:40px;border:1px solid var(--rule);background:rgba(255,255,255,.04);color:var(--txd);cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;transition:.2s;font-family:'Poppins',sans-serif}
+.nbtn:hover:not(:disabled){background:var(--p);color:#fff;border-color:var(--p)}
+.nbtn:disabled{opacity:.15;cursor:default}
+.dots{display:flex;gap:.45rem}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--txm);border:none;cursor:pointer;transition:.2s}
+.dot.on{background:var(--lime);transform:scale(1.5)}
+.ctr{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--txd);min-width:36px;text-align:center;font-weight:600}
+
+/* ══════════════════════════════════════════════
+   SLIDE 1 — PORTADA
+══════════════════════════════════════════════ */
+#s1{background:var(--bg);justify-content:flex-end;padding-bottom:10vh}
+.blobs{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(60px)}
+.b1{width:55vw;height:55vw;background:radial-gradient(circle,rgba(109,40,217,.6) 0%,transparent 70%);top:-10%;left:-5%;animation:f1 14s ease-in-out infinite}
+.b2{width:45vw;height:45vw;background:radial-gradient(circle,rgba(245,158,11,.22) 0%,transparent 70%);bottom:-5%;right:-5%;animation:f2 18s ease-in-out infinite}
+.b3{width:30vw;height:30vw;background:radial-gradient(circle,rgba(139,92,246,.4) 0%,transparent 70%);top:30%;right:20%;animation:f3 11s ease-in-out infinite}
+@keyframes f1{0%,100%{transform:translate(0,0)}40%{transform:translate(8vw,-5vh)}70%{transform:translate(-3vw,8vh)}}
+@keyframes f2{0%,100%{transform:translate(0,0)}35%{transform:translate(-10vw,6vh)}65%{transform:translate(5vw,-8vh)}}
+@keyframes f3{0%,100%{transform:translate(0,0)}50%{transform:translate(-8vw,4vh)}}
+
+.p-logo{font-size:.7rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--txd);position:absolute;top:5vh;left:7vw}
+.p-logo span{color:var(--lime)}
+.p-tag{position:absolute;top:5vh;right:7vw}
+.p-inner{position:relative;z-index:2}
+.p-h1{font-size:clamp(3.5rem,8.5vw,9.5rem);font-weight:900;line-height:.9;letter-spacing:-.055em;color:var(--tx)}
+.p-h1 .dim{color:rgba(245,240,255,.38);font-weight:200}
+.p-h1 .lime{color:var(--lime);font-style:italic;font-weight:300}
+.p-rule{width:100%;max-width:680px;height:1px;background:linear-gradient(90deg,var(--lime) 0%,transparent 100%);margin:2.5rem 0 1.8rem}
+.p-sub{font-size:clamp(.95rem,1.3vw,1.15rem);font-weight:400;color:var(--txd);line-height:1.7;max-width:480px}
+.p-hint{position:absolute;bottom:8vh;right:7vw;font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--txm);display:flex;align-items:center;gap:.5rem}
+.p-hint::after{content:'→';font-size:.9rem}
+
+/* ══════════════════════════════════════════════
+   SLIDE 2 — EL PROBLEMA
+══════════════════════════════════════════════ */
+#s2{background:var(--bg)}
+.ghost{position:absolute;font-size:28vw;font-weight:900;letter-spacing:-.08em;line-height:1;color:rgba(255,255,255,.025);right:-2vw;top:50%;transform:translateY(-50%);user-select:none;pointer-events:none}
+.s2-grid{display:grid;grid-template-columns:1fr 1fr;gap:5vw;align-items:center;position:relative;z-index:2}
+.s2-left{}
+.s2-hl{font-size:clamp(1.6rem,3vw,3.2rem);font-weight:800;line-height:1.05;letter-spacing:-.04em}
+.s2-hl .acc{color:var(--loss)}
+.s2-body{font-size:clamp(1rem,1.15vw,1.1rem);color:var(--txd);font-weight:400;line-height:1.8;margin-top:1.2rem;max-width:400px}
+.s2-right{display:flex;flex-direction:column;gap:1px}
+.stat-row{display:flex;align-items:center;gap:1.5rem;padding:1.4rem 1.8rem;background:rgba(255,255,255,.03);border-left:2px solid transparent;transition:.3s}
+.stat-row.l{border-color:var(--loss)}
+.stat-row.g{border-color:var(--lime)}
+.stat-num{font-size:clamp(2rem,3.5vw,3.5rem);font-weight:900;letter-spacing:-.05em;line-height:1;flex-shrink:0;min-width:100px}
+.stat-num.l{color:var(--loss)}
+.stat-num.g{color:var(--lime)}
+.stat-desc{font-size:clamp(.78rem,.9vw,.88rem);color:var(--txd);font-weight:400;line-height:1.5}
+.stat-desc strong{color:var(--tx);font-weight:600}
+
+/* ══════════════════════════════════════════════
+   SLIDE 3 — DOS PREGUNTAS
+══════════════════════════════════════════════ */
+#s3{background:var(--bg2);padding:0}
+.q-wrap{display:grid;grid-template-rows:1fr 1px 1fr;height:100%}
+.q-block{display:flex;align-items:center;gap:3.5vw;padding:4.5vh 7vw;position:relative;overflow:hidden}
+.q-divider{background:var(--rule)}
+.q-block.top{border-bottom:none}
+.q-block.bot{background:rgba(255,255,255,.02)}
+.q-ghost{position:absolute;right:-1vw;font-size:18vw;font-weight:900;color:rgba(255,255,255,.015);letter-spacing:-.08em;line-height:1;user-select:none;pointer-events:none}
+.q-num{font-size:clamp(4rem,9vw,10rem);font-weight:900;letter-spacing:-.07em;line-height:1;color:rgba(245,240,255,.30);flex-shrink:0;min-width:130px}
+.q-content{}
+.q-label{font-size:1rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--lime);margin-bottom:.8rem}
+.q-text{font-size:clamp(1.8rem,3.2vw,3.5rem);font-weight:700;letter-spacing:-.03em;color:var(--tx);line-height:1.05;margin-bottom:.8rem}
+.q-sub{font-size:clamp(1.15rem,1.5vw,1.45rem);color:var(--txd);font-weight:400;line-height:1.65}
+
+/* ══════════════════════════════════════════════
+   SLIDES 4/5/6 — EJEMPLOS
+══════════════════════════════════════════════ */
+.ej-slide{background:var(--bg)}
+.ej-top{margin-bottom:2vh;position:relative;z-index:2}
+.ej-sector{display:inline-flex;align-items:center;gap:.7rem;font-size:1rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--txd);border:1px solid var(--rule);padding:.45rem 1.2rem;margin-bottom:1rem}
+.ej-sector::before{content:'';width:5px;height:5px;background:var(--lime);border-radius:50%}
+.ej-problem{font-size:clamp(1.25rem,2.1vw,2rem);font-weight:600;color:var(--tx);line-height:1.3;max-width:75vw}
+.ej-rule{width:100%;height:1px;background:var(--rule);margin:1.5vh 0;position:relative;z-index:2}
+.ej-body{display:grid;grid-template-columns:1fr 1fr;gap:2px;position:relative;z-index:2}
+.ej-loss{background:rgba(255,53,100,.06);padding:2rem 2.5rem;border-top:2px solid var(--loss);position:relative;overflow:hidden}
+.ej-sol{background:rgba(135,178,41,.05);padding:2rem 2.5rem;border-top:2px solid var(--lime)}
+.ej-panel-label{font-size:1rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;margin-bottom:1rem}
+.ej-panel-label.loss{color:var(--loss)}
+.ej-panel-label.lime{color:var(--lime)}
+.ej-big{font-size:clamp(3rem,7vw,8rem);font-weight:900;letter-spacing:-.06em;line-height:.95;display:block;margin-bottom:.4rem}
+.ej-big.loss{color:var(--loss)}
+.ej-big.lime{color:var(--lime)}
+.ej-big.fee{color:var(--fee)}
+.ej-hint{font-size:1.1rem;color:var(--txd);font-weight:400}
+.ej-sol-grid{display:flex;flex-direction:column;gap:.8rem;margin-top:.5rem}
+.ej-sol-row{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:.6rem;border-bottom:1px solid var(--rule)}
+.ej-sol-row:last-child{border-bottom:none}
+.ej-sol-row:has(.hero-val){background:rgba(135,178,41,.07);padding:.8rem 1rem;margin:0 -1rem;border-bottom:none!important;border-left:3px solid var(--lime)}
+.ej-sol-label{font-size:1rem;letter-spacing:.09em;text-transform:uppercase;color:var(--txd);font-weight:600}
+.ej-sol-val{font-size:clamp(1.3rem,2.3vw,2.1rem);font-weight:800;letter-spacing:-.04em}
+.hero-val{font-size:clamp(2.4rem,4.5vw,4.2rem)!important;letter-spacing:-.055em!important;line-height:1!important}
+.ej-sol-val.fee{color:var(--fee)}
+.ej-sol-val.lime{color:var(--lime)}
+/* Loss bar */
+.ej-bar-wrap{margin-top:1.5rem}
+.ej-bar-label{font-size:.92rem;letter-spacing:.1em;text-transform:uppercase;color:var(--txd);margin-bottom:.6rem}
+.ej-bar-track{height:7px;background:rgba(255,255,255,.1);overflow:hidden}
+.ej-bar-fill{height:100%;width:0;background:var(--loss);transition:width 1.4s cubic-bezier(.4,0,.2,1) .5s}
+.s.active .ej-bar-fill{width:var(--pct)}
+/* ROI sticker */
+.roi-sticker{display:inline-flex;flex-direction:column;align-items:center;background:var(--lime);padding:.9rem 1.6rem;margin-top:1.2rem;transform:rotate(-1.5deg)}
+.roi-sticker .rs-num{font-size:2.6rem;font-weight:900;color:var(--bg);letter-spacing:-.05em;line-height:1}
+.roi-sticker .rs-lbl{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(7,4,18,.5);font-weight:700;margin-top:.1rem}
+.roi-sticker .rs-sub{font-size:.7rem;color:rgba(7,4,18,.45);font-weight:400;margin-top:.15rem;letter-spacing:.04em}
+/* ghost number bg */
+.ej-ghost{position:absolute;font-size:26vw;font-weight:900;color:rgba(255,53,100,.04);letter-spacing:-.08em;line-height:1;right:-3vw;bottom:-2vh;user-select:none;pointer-events:none}
+
+/* ══════════════════════════════════════════════
+   SLIDE 7 — REGLA 300%
+══════════════════════════════════════════════ */
+#s7{background:var(--bg);justify-content:center;align-items:center;text-align:center}
+.r7-inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center}
+.r7-ghost{position:absolute;font-size:35vw;font-weight:900;color:rgba(255,255,255,.018);letter-spacing:-.1em;line-height:1;top:50%;left:50%;transform:translate(-50%,-50%);user-select:none;pointer-events:none;white-space:nowrap}
+.r7-pre{font-size:clamp(1.1rem,1.7vw,1.55rem);font-weight:400;color:var(--txd);letter-spacing:.05em}
+.r7-h{font-size:clamp(4rem,10vw,12rem);font-weight:900;letter-spacing:-.07em;line-height:.88;margin:.4rem 0}
+.r7-h .l{color:var(--loss)}
+.r7-h .g{color:var(--lime)}
+.r7-h .f{color:var(--fee)}
+.r7-rule{width:200px;height:1px;background:linear-gradient(90deg,transparent,var(--lime),transparent);margin:2rem 0}
+.r7-math{display:flex;align-items:center;gap:1.5rem;font-size:clamp(.95rem,1.1vw,1.05rem);color:var(--txd)}
+.r7-m{text-align:center}
+.r7-m-num{font-size:clamp(1.8rem,3vw,3rem);font-weight:900;letter-spacing:-.05em;line-height:1;margin-bottom:.3rem}
+.r7-m-lbl{font-size:.74rem;letter-spacing:.13em;text-transform:uppercase;color:var(--txd)}
+.r7-arr{font-size:2rem;color:var(--rule)}
+.r7-bottom{font-size:clamp(1rem,1.2vw,1.15rem);color:var(--txd);margin-top:2rem;font-weight:300;letter-spacing:.03em}
+.r7-bottom strong{color:var(--tx)}
+
+/* ══════════════════════════════════════════════
+   SLIDE 8 — CALCULADORA
+══════════════════════════════════════════════ */
+#s8{background:var(--bg);padding:4vh 7vw}
+.c8-top{margin-bottom:2.5vh}
+.c8-layout{display:grid;grid-template-columns:1fr 1fr;gap:4vw;height:calc(100% - 10vh)}
+.c8-left{display:flex;flex-direction:column;gap:2.5vh;justify-content:center}
+.c8-right{display:flex;flex-direction:column;justify-content:center;gap:1px}
+
+/* output center number */
+.c8-output-main{display:flex;flex-direction:column;align-items:flex-start;padding:2rem 2.2rem;background:rgba(255,53,100,.08);border-left:3px solid var(--loss);margin-bottom:1px}
+.c8-out-label{font-size:1rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--loss);margin-bottom:.5rem}
+.c8-out-num{font-size:clamp(2.5rem,5.5vw,6rem);font-weight:900;letter-spacing:-.06em;line-height:.95;color:var(--loss)}
+.c8-out-sub{font-size:1.05rem;color:var(--txd);margin-top:.5rem}
+
+.c8-output-row{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 1.8rem;border-left:3px solid transparent}
+.c8-output-row.rm{background:rgba(255,53,100,.05);border-color:rgba(255,53,100,.3)}
+.c8-output-row.rf{background:var(--fee2);border-color:rgba(196,168,255,.3)}
+.c8-output-row.rg{background:rgba(135,178,41,.07);border-color:rgba(135,178,41,.4)}
+.c8-output-row.rr{background:var(--lime);border-color:transparent}
+.c8-row-label{font-size:1rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+.rm .c8-row-label{color:var(--loss)}
+.rf .c8-row-label{color:var(--fee)}
+.rg .c8-row-label{color:var(--lime)}
+.rr .c8-row-label{color:rgba(7,4,18,.55)}
+.c8-row-val{font-size:clamp(1.3rem,2.4vw,2.2rem);font-weight:900;letter-spacing:-.04em}
+.rm .c8-row-val{color:var(--loss)}
+.rf .c8-row-val{color:var(--fee)}
+.rg .c8-row-val{color:var(--lime)}
+.rr .c8-row-val{color:var(--bg);font-size:clamp(1.8rem,3vw,2.8rem)}
+
+/* sliders */
+.sl-group{display:flex;flex-direction:column;gap:.8rem}
+.sl-head{display:flex;justify-content:space-between;align-items:baseline}
+.sl-label{font-size:1.15rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--txd)}
+.sl-val{font-size:2rem;font-weight:900;letter-spacing:-.05em;color:var(--tx)}
+.sl-val span{font-size:1rem;font-weight:400;color:var(--txd)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;background:var(--rule);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:var(--lime);cursor:pointer;box-shadow:0 0 0 6px rgba(135,178,41,.2);transition:.2s}
+input[type=range]::-webkit-slider-thumb:hover{box-shadow:0 0 0 8px rgba(135,178,41,.22)}
+input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:var(--lime);border:none;cursor:pointer}
+.sl-range{display:flex;justify-content:space-between;font-size:.86rem;color:var(--txm)}
+.c8-note{font-size:.88rem;color:var(--txm);font-weight:300;line-height:1.5;padding:1rem 1.2rem;border:1px solid var(--rule);margin-top:.8rem}
+
+/* ══════════════════════════════════════════════
+   SLIDE 9 — POR QUÉ LMNHL
+══════════════════════════════════════════════ */
+#s9{background:var(--bg2)}
+.s9-grid{display:grid;grid-template-columns:1fr 1fr;gap:5vw;align-items:center;position:relative;z-index:2}
+.s9-hl{font-size:clamp(1.8rem,3.2vw,3.5rem);font-weight:800;letter-spacing:-.04em;line-height:1.05}
+.s9-hl em{color:var(--lime);font-style:italic;font-weight:300}
+.s9-body{font-size:clamp(1rem,1.1vw,1.1rem);color:var(--txd);font-weight:400;line-height:1.8;margin-top:1rem}
+.s9-accent{margin-top:1.5rem;padding:1rem 1.4rem;border-left:3px solid var(--lime);background:rgba(135,178,41,.07);font-size:clamp(.98rem,1.1vw,1.1rem);font-weight:400;color:var(--tx);line-height:1.5}
+.s9-pills{display:flex;flex-direction:column;gap:1px}
+.s9-pill{display:flex;align-items:center;gap:1rem;padding:1rem 1.4rem;background:rgba(255,255,255,.025);border-left:2px solid transparent;transition:.2s}
+.s9-pill:hover{background:rgba(135,178,41,.06);border-color:var(--lime)}
+.s9-check{width:22px;height:22px;background:var(--lime);display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;color:var(--bg);flex-shrink:0}
+.s9-pt{font-size:clamp(.96rem,1.05vw,1.05rem);font-weight:400;color:var(--tx);line-height:1.4}
+.s9-pt strong{color:var(--lime);font-weight:700}
+
+/* ══════════════════════════════════════════════
+   SLIDE 10 — CTA
+══════════════════════════════════════════════ */
+#s10{background:var(--bg);justify-content:center;align-items:center;text-align:center}
+.s10-blobs{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.s10-b1{position:absolute;width:60vw;height:60vw;border-radius:50%;background:radial-gradient(circle,rgba(109,40,217,.65) 0%,transparent 65%);top:-15%;left:-10%;animation:f1 16s ease-in-out infinite}
+.s10-b2{position:absolute;width:40vw;height:40vw;border-radius:50%;background:radial-gradient(circle,rgba(245,158,11,.25) 0%,transparent 65%);bottom:-10%;right:-5%;animation:f2 20s ease-in-out infinite}
+.s10-inner{position:relative;z-index:2;max-width:700px}
+.s10-ey{font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:var(--lime);margin-bottom:1.5rem;display:flex;align-items:center;justify-content:center;gap:.7rem}
+.s10-ey::before{content:'';width:18px;height:2px;background:var(--lime)}
+.s10-h{font-size:clamp(3rem,7vw,8rem);font-weight:900;letter-spacing:-.06em;line-height:.9;color:var(--tx);margin-bottom:1.5rem}
+.s10-h em{color:var(--lime);font-style:italic;font-weight:300}
+.s10-body{font-size:clamp(1rem,1.2vw,1.15rem);color:var(--txd);font-weight:400;line-height:1.8;max-width:480px;margin:0 auto 2rem}
+.cta-btn{display:inline-flex;align-items:center;gap:.8rem;background:var(--lime);color:var(--bg);font-size:.84rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;padding:1.1rem 2.5rem;text-decoration:none;transition:.2s;font-family:'Poppins',sans-serif;border:none;cursor:pointer}
+.cta-btn:hover{background:var(--limel);gap:1.3rem}
+.s10-contact{margin-top:2rem;font-size:.92rem;color:var(--txd);display:flex;gap:2rem;justify-content:center;flex-wrap:wrap}
+.s10-contact a{color:var(--plt);text-decoration:none}
+.s10-stats{display:flex;gap:4rem;justify-content:center;margin-top:3rem;flex-wrap:wrap}
+.s10-stat .n{font-size:clamp(1.5rem,3vw,2.5rem);font-weight:900;color:var(--lime);letter-spacing:-.05em;line-height:1}
+.s10-stat .l{font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--txd);margin-top:.2rem}
+
+@media(max-width:900px){
+  .s2-grid,.ej-body,.s9-grid,.c8-layout,.s7 .r7-math{grid-template-columns:1fr}
+  .q-block{padding:4vh 5vw}
+}
+
+/* ── ESTRUCTURA PROBLEMA → SOLUCIÓN → NÚMEROS ───────────────── */
+.ps-wrap{display:grid;grid-template-columns:1fr auto 1fr;gap:0;margin-bottom:3px}
+.ps-block{padding:1.6rem 1.8rem;display:flex;flex-direction:column;gap:.6rem}
+.ps-block.problema{background:rgba(255,45,107,.08);border-left:4px solid var(--loss);border-top:none}
+.ps-block.solucion{background:rgba(245,158,11,.08);border-left:4px solid var(--lime);border-top:none}
+.ps-label{font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;font-weight:800;margin-bottom:.1rem}
+.ps-label.p{color:var(--loss)}
+.ps-label.s{color:var(--lime)}
+.ps-text{font-size:clamp(1rem,1.35vw,1.25rem);color:var(--tx);font-weight:500;line-height:1.5}
+.ps-arrow{display:flex;align-items:center;justify-content:center;padding:0 1rem;font-size:2rem;color:var(--txd);background:rgba(255,255,255,.02)}
+.nums-wrap{display:grid;grid-template-columns:1fr 1px 1fr 1px auto;gap:0}
+.num-block{padding:1.4rem 1.8rem;display:flex;flex-direction:column;gap:.3rem}
+.num-block.loss-blk{background:rgba(255,45,107,.07)}
+.num-block.fee-blk{background:rgba(196,168,255,.07)}
+.num-block.save-blk{background:rgba(245,158,11,.08)}
+.num-divider{background:var(--rule)}
+.num-label-sm{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+.num-label-sm.l{color:var(--loss)}
+.num-label-sm.f{color:var(--fee)}
+.num-label-sm.g{color:var(--lime)}
+.num-big{font-size:clamp(1.6rem,2.8vw,2.8rem);font-weight:900;letter-spacing:-.05em;line-height:1}
+.num-big.l{color:var(--loss)}
+.num-big.f{color:var(--fee)}
+.num-big.g{color:var(--lime)}
+.num-sub{font-size:.82rem;color:var(--txd);margin-top:.1rem}
+.roi-blk{background:var(--lime);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.4rem 2rem;gap:.2rem}
+.roi-blk .roi-n{font-size:clamp(2rem,3.5vw,3.2rem);font-weight:900;color:var(--bg);letter-spacing:-.05em;line-height:1}
+.roi-blk .roi-l{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(2,1,12,.5);font-weight:700}
+.roi-blk .roi-s{font-size:.62rem;color:rgba(2,1,12,.4);font-weight:400}
+
+.nums-wrap2{display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr 1px auto;gap:0}
+.num-block2{padding:1.3rem 1.6rem;display:flex;flex-direction:column;gap:.25rem}
+.num-main{font-size:clamp(1.8rem,3vw,2.8rem);font-weight:900;letter-spacing:-.05em;line-height:1}
+.num-main.l{color:var(--loss)}
+.num-main.f{color:var(--fee)}
+.num-main.g{color:var(--lime)}
+.num-equiv{font-size:clamp(.88rem,1.1vw,1rem);color:var(--txd);font-weight:400;margin-top:.2rem}
+.num-contract{font-size:.72rem;letter-spacing:.08em;color:var(--txd);border:1px solid var(--rule);padding:.2rem .6rem;display:inline-block;margin-top:.4rem}
+
+/* ── SLIDES DE EJEMPLO · VERSIÓN MÁGICA ─────────────────────── */
+.ej-magic-wrap{display:flex;flex-direction:column;height:100%;gap:0;position:relative;z-index:2}
+.ej-magic-header{display:flex;align-items:center;gap:1.5rem;padding:.8rem 0 1.2rem}
+.ej-magic-icon{width:64px;height:64px;flex-shrink:0;position:relative}
+.ej-magic-icon-ring{position:absolute;inset:-8px;border-radius:50%;background:radial-gradient(circle,rgba(245,158,11,.18) 0%,transparent 70%);animation:pulse-magic 3s ease-in-out infinite}
+@keyframes pulse-magic{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.2);opacity:1}}
+.ej-magic-sector{font-size:clamp(1.1rem,1.8vw,1.7rem);font-weight:800;letter-spacing:-.02em;color:var(--tx);text-shadow:0 0 30px rgba(245,158,11,.3)}
+.ej-magic-sector span{color:var(--lime)}
+.ej-ps-row{display:grid;grid-template-columns:1fr 60px 1fr;flex:0 0 42%;gap:0;min-height:0}
+.ej-ps-col{padding:1.5rem 2rem;display:flex;flex-direction:column;justify-content:center;gap:.8rem;position:relative;overflow:hidden}
+.ej-ps-col.prob{background:rgba(255,45,107,.08);border-left:4px solid var(--loss)}
+.ej-ps-col.sol{background:rgba(245,158,11,.08);border-left:4px solid var(--lime)}
+.ej-ps-col-label{font-size:clamp(.78rem,1vw,.95rem);letter-spacing:.2em;text-transform:uppercase;font-weight:800}
+.ej-ps-col-label.prob{color:var(--loss)}
+.ej-ps-col-label.sol{color:var(--lime)}
+.ej-ps-col-text{font-size:clamp(1.05rem,1.5vw,1.5rem);font-weight:600;color:var(--tx);line-height:1.5}
+.ej-ps-col-text strong.loss{color:var(--loss)}
+.ej-ps-col-text strong.gain{color:var(--lime)}
+.ej-ps-arrow-col{display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.02)}
+.ej-ps-arrow-col svg{filter:drop-shadow(0 0 8px rgba(245,158,11,.4))}
+.ej-nums-row{display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr 1px auto;gap:0;flex:1}
+.ej-num-col{padding:1.5rem 1.8rem;display:flex;flex-direction:column;gap:.35rem;justify-content:center}
+.ej-num-col.l{background:rgba(255,45,107,.07)}
+.ej-num-col.f{background:rgba(196,168,255,.07)}
+.ej-num-col.g{background:rgba(245,158,11,.08)}
+.ej-num-lbl{font-size:clamp(.82rem,1vw,.98rem);letter-spacing:.12em;text-transform:uppercase;font-weight:700}
+.ej-num-lbl.l{color:var(--loss)}
+.ej-num-lbl.f{color:var(--fee)}
+.ej-num-lbl.g{color:var(--lime)}
+.ej-num-val{font-size:clamp(2.8rem,5.5vw,5.5rem);font-weight:900;letter-spacing:-.06em;line-height:1}
+.ej-num-val.l{color:var(--loss)}
+.ej-num-val.f{color:var(--fee)}
+.ej-num-val.g{color:var(--lime);text-shadow:0 0 20px rgba(245,158,11,.3)}
+.ej-num-sub{font-size:clamp(.75rem,.9vw,.88rem);color:var(--txd);margin-top:.1rem}
+.ej-num-contract{font-size:.65rem;letter-spacing:.08em;color:var(--txd);border:1px solid var(--rule);padding:.15rem .5rem;display:inline-block;margin-top:.3rem}
+.ej-roi-col{background:var(--lime);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem 2.2rem;gap:.3rem;position:relative;overflow:hidden}
+.ej-roi-col::before{content:'';position:absolute;inset:-20px;background:radial-gradient(circle,rgba(255,255,255,.15) 0%,transparent 70%);animation:pulse-magic 2.5s ease-in-out infinite}
+.ej-roi-big{font-size:clamp(2.4rem,4.5vw,3.8rem);font-weight:900;color:var(--bg);letter-spacing:-.05em;line-height:1;position:relative;z-index:1}
+.ej-roi-lbl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(2,1,12,.5);font-weight:700;position:relative;z-index:1}
+.ej-roi-sub{font-size:.6rem;color:rgba(2,1,12,.4);position:relative;z-index:1}
+
+/* VARITA MÁGICA */
+
+#wand-cur{
+  position:fixed;top:0;left:0;
+  pointer-events:none;z-index:99999;
+  will-change:transform;
+  filter:drop-shadow(0 0 8px rgba(245,158,11,.9));
+  transition:filter .15s;
+}
+#wand-cur.flash{filter:drop-shadow(0 0 28px #fff) drop-shadow(0 0 12px #F59E0B)}
+@keyframes sdot{0%{opacity:1;transform:scale(1) translate(0,0)}100%{opacity:0;transform:scale(0) translate(var(--tx),var(--ty))}}
+@keyframes stxt{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-50px) scale(1.6)}}
+.sdot{position:fixed;pointer-events:none;z-index:9998;border-radius:50%;animation:sdot .75s ease-out forwards}
+.stxt{position:fixed;pointer-events:none;z-index:9998;font-family:serif;animation:stxt .9s ease-out forwards;color:#F59E0B}
+/* REVEAL */
+.nums-veil{opacity:.45;filter:brightness(.55) saturate(.6);transition:opacity .4s ease,filter .4s ease;position:relative}
+.nums-veil.open{opacity:1;filter:brightness(1) saturate(1)}
+.reveal-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  gap:.8rem;font-size:clamp(.82rem,1.1vw,1rem);letter-spacing:.18em;text-transform:uppercase;
+  font-weight:700;color:rgba(245,158,11,.45);pointer-events:none;transition:opacity .3s;z-index:2}
+.reveal-hint svg{animation:pulse-magic 1.5s ease-in-out infinite}
+.reveal-hint.gone{opacity:0}
+</style>
+</head>
+<body>
+<canvas id="grain" style="position:fixed;inset:0;pointer-events:none;z-index:9000;opacity:.03"></canvas>
+
+<div class="pres" id="pres">
+
+<!-- ═══ S1 PORTADA ═══════════════════════════════════════ -->
+<div class="s" id="s1">
+  <svg style="position:absolute;width:85vw;height:85vw;max-width:900px;max-height:900px;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0;opacity:.07" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="250" cy="250" r="240" fill="none" stroke="#F59E0B" stroke-width="1"/>
+  <circle cx="250" cy="250" r="195" fill="none" stroke="#F59E0B" stroke-width=".5"/>
+  <circle cx="250" cy="250" r="150" fill="none" stroke="#F59E0B" stroke-width=".5"/>
+  <circle cx="250" cy="250" r="100" fill="none" stroke="#8b5cf6" stroke-width=".5"/>
+  <line x1="250" y1="10" x2="250" y2="490" stroke="#F59E0B" stroke-width=".4"/>
+  <line x1="10" y1="250" x2="490" y2="250" stroke="#F59E0B" stroke-width=".4"/>
+  <line x1="80" y1="80" x2="420" y2="420" stroke="#8b5cf6" stroke-width=".3"/>
+  <line x1="420" y1="80" x2="80" y2="420" stroke="#8b5cf6" stroke-width=".3"/>
+  <polygon points="250,18 290,145 420,145 320,222 358,350 250,270 142,350 180,222 80,145 210,145" fill="none" stroke="#F59E0B" stroke-width="1"/>
+  <text x="250" y="16" text-anchor="middle" fill="#F59E0B" font-size="14" font-family="serif">✦</text>
+  <text x="250" y="498" text-anchor="middle" fill="#F59E0B" font-size="14" font-family="serif">✦</text>
+  <text x="8" y="255" text-anchor="middle" fill="#F59E0B" font-size="14" font-family="serif">✦</text>
+  <text x="494" y="255" text-anchor="middle" fill="#F59E0B" font-size="14" font-family="serif">✦</text>
+</svg>
+<div class="blobs"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+  <div class="p-logo">✦ Los Martes <span>No Hay Luna</span></div>
+  <div class="p-tag"><span class="tagline">Consultoría IA · 2026</span></div>
+  <div class="p-inner">
+    <div class="p-h1">
+      <div class="dim">Lo que parece</div>
+      <div>magia...</div>
+      <div class="lime">es tecnología.</div>
+    </div>
+    <div class="p-rule"></div>
+    <div class="p-sub">Hay cientos de herramientas, cursos y soluciones de IA. El problema no es la tecnología. Es saber exactamente cuál tiene sentido para tu negocio — y quién te lo dice con criterio.</div>
+  </div>
+  <div class="p-hint">Descubre el secreto</div>
+</div>
+
+<!-- ═══ S2 EL PROBLEMA ═══════════════════════════════════ -->
+<div class="s" id="s2">
+  <div class="ghost" style="font-size:22vw;right:-2vw;top:50%;transform:translateY(-50%)">?</div>
+  <div class="s2-grid" style="position:relative;z-index:2">
+    <div class="s2-left">
+      <div class="eyebrow">✦ El problema real</div>
+      <div class="s2-hl">Hay demasiado ruido.<br>Y nadie tiene tiempo<br>de <span class="acc">filtrarlo.</span></div>
+      <div class="s2-body">Cualquier empresario que busque hoy "IA para mi negocio" va a encontrar cientos de cursos, herramientas, agentes y promesas. El resultado es siempre el mismo: parálisis. No se hace nada porque no se sabe por dónde empezar. Y mientras tanto, los procesos siguen igual de costosos.</div>
+      <div style="margin-top:1.8rem;padding:1.2rem 1.5rem;background:rgba(245,158,11,.08);border-left:3px solid var(--lime);font-size:1rem;color:var(--tx);font-weight:400;line-height:1.6">
+        <strong style="color:var(--lime)">La verdad:</strong> Lo que funciona para una gestoría no funciona para una clínica. Lo que vale para una agencia no sirve para una empresa de reformas. La IA no es un producto. Es un criterio.
+      </div>
+    </div>
+    <div class="s2-right">
+      <div class="stat-row l">
+        <div class="stat-num l" style="font-size:clamp(1.5rem,3vw,3rem);min-width:80px">+200</div>
+        <div class="stat-desc"><strong>herramientas de IA</strong> nuevas cada mes. Nadie puede estar al día de todo — y no tiene sentido intentarlo.</div>
+      </div>
+      <div class="stat-row l" style="margin-top:1px">
+        <div class="stat-num l" style="font-size:clamp(1.5rem,3vw,3rem);min-width:80px">16h</div>
+        <div class="stat-desc"><strong>semanales por persona</strong> se pierden en tareas que ya podrían estar automatizadas. Casi la mitad de un año laboral.</div>
+      </div>
+      <div class="stat-row g" style="margin-top:1px">
+        <div class="stat-num g" style="font-size:clamp(1.5rem,3vw,3rem);min-width:80px">&lt;12%</div>
+        <div class="stat-desc"><strong>de las pymes españolas</strong> ha integrado IA de forma estructurada. El 88% restante sigue igual — o peor, perdida en cursos que nunca aplica.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S3 DOS PREGUNTAS ══════════════════════════════════ -->
+<div class="s" id="s3" style="padding:0">
+  <div class="q-wrap" style="height:100%">
+    <div class="q-block top">
+      <div class="q-ghost">01</div>
+      <div class="q-num">01</div>
+      <div class="q-content">
+        <div class="q-label">Primera pregunta</div>
+        <div class="q-text">¿Qué tarea le roba más tiempo a tu equipo?</div>
+        <div class="q-sub">La que siempre ha existido. La que nadie ha cuestionado nunca. La que alguien hace todos los días aunque no aporta valor directo al negocio.</div>
+      </div>
+    </div>
+    <div class="q-divider"></div>
+    <div class="q-block bot">
+      <div class="q-ghost">02</div>
+      <div class="q-num">02</div>
+      <div class="q-content">
+        <div class="q-label">Segunda pregunta</div>
+        <div class="q-text">¿Cuánto cuesta ese tiempo al año?</div>
+        <div class="q-sub">No en horas. En euros. Coste de persona × horas perdidas × frecuencia mensual × 12 meses. Siempre es más de lo que parece.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S4 GESTORÍA ═══════════════════════════════════════ -->
+<div class="s ej-slide" id="s4" data-magic-reveal="true" style="padding:3.5vh 6vw;justify-content:flex-start">
+  <div class="ej-magic-wrap">
+
+    <!-- CABECERA: ICON + SECTOR -->
+    <div class="ej-magic-header">
+      <div class="ej-magic-icon">
+        <div class="ej-magic-icon-ring"></div>
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+  <rect x="8" y="4" width="36" height="46" rx="4" stroke="#F59E0B" stroke-width="2.5" transform="rotate(6 8 4)"/>
+  <rect x="6" y="8" width="36" height="46" rx="4" stroke="#F59E0B" stroke-width="2.5" transform="rotate(2 6 8)"/>
+  <rect x="6" y="10" width="36" height="46" rx="4" fill="rgba(245,158,11,.06)" stroke="#F59E0B" stroke-width="2.5"/>
+  <line x1="14" y1="24" x2="34" y2="24" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+  <line x1="14" y1="32" x2="34" y2="32" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+  <line x1="14" y1="40" x2="24" y2="40" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="50" cy="48" r="12" fill="rgba(255,45,107,.12)" stroke="#FF2D6B" stroke-width="2.5"/>
+  <line x1="50" y1="43" x2="50" y2="48" stroke="#FF2D6B" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="50" y1="48" x2="54" y2="51" stroke="#FF2D6B" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="50" cy="48" r="2" fill="#FF2D6B"/>
+</svg>
+      </div>
+      <div class="ej-magic-sector">Gestoría · <span>Consultoría Contable</span></div>
+    </div>
+
+    <!-- PROBLEMA → SOLUCIÓN (ocupa el espacio principal) -->
+    <div class="ej-ps-row" style="min-height:0;margin-bottom:3px">
+      <div class="ej-ps-col prob">
+        <div class="ej-ps-col-label prob">El problema</div>
+        <div class="ej-ps-col-text">Una técnica contable dedica <strong class="loss">3 horas al día</strong> a clasificar facturas a mano y registrarlas en el sistema. Cada día. Sin excepción.</div>
+      </div>
+      <div class="ej-ps-arrow-col">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <path d="M6 16 L26 16 M18 8 L26 16 L18 24" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="ej-ps-col sol">
+        <div class="ej-ps-col-label sol">La solución</div>
+        <div class="ej-ps-col-text">Sistema de IA que lee los PDFs, extrae los datos y los registra automáticamente. <strong class="gain">De 3 horas a 20 minutos.</strong> Sin errores. Cumpliendo VeriFactu 2026.</div>
+      </div>
+    </div>
+
+    <!-- NÚMEROS -->
+    <div class="nums-veil ej-nums-row">
+      <div class="ej-num-col l">
+        <div class="ej-num-lbl l">Pierdes al mes</div>
+        <div class="ej-num-val l" data-countup="1200" data-format="money">1.200 €</div>
+        <div class="ej-num-sub">= 14.400 €/año</div>
+      </div>
+      <div style="background:var(--rule)"></div>
+      <div class="ej-num-col f">
+        <div class="ej-num-lbl f">Fee mensual LMNHL</div>
+        <div class="ej-num-val f" data-countup="300" data-format="money">300 €</div>
+        <div class="ej-num-contract">Contrato mínimo 12 meses</div>
+      </div>
+      <div style="background:var(--rule)"></div>
+      <div class="ej-num-col g">
+        <div class="ej-num-lbl g">Te ahorras al mes</div>
+        <div class="ej-num-val g hero-val" data-countup="900" data-format="money">900 €</div>
+        <div class="ej-num-sub">= <strong style="color:var(--lime)">10.800 €/año</strong></div>
+      </div>
+      <div style="background:var(--rule)"></div>
+    <div class="ej-roi-col">
+        <div class="ej-roi-big">300%</div>
+        <div class="ej-roi-lbl">ROI</div>
+        <div class="ej-roi-sub">Retorno sobre la inversión</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ S5 ATENCIÓN AL CLIENTE ════════════════════════════ -->
+<div class="s ej-slide" id="s5" data-magic-reveal="true" style="padding:3.5vh 6vw;justify-content:flex-start">
+  <div class="ej-magic-wrap">
+
+    <!-- CABECERA: ICON + SECTOR -->
+    <div class="ej-magic-header">
+      <div class="ej-magic-icon">
+        <div class="ej-magic-icon-ring"></div>
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+  <rect x="4" y="6" width="40" height="28" rx="6" stroke="#F59E0B" stroke-width="2.5"/>
+  <path d="M4 28 L12 38 L12 34 L44 34" stroke="#F59E0B" stroke-width="2.5" stroke-linejoin="round"/>
+  <line x1="13" y1="17" x2="35" y2="17" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+  <line x1="13" y1="24" x2="28" y2="24" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+  <rect x="26" y="28" width="34" height="24" rx="5" stroke="#c4a8ff" stroke-width="2.5"/>
+  <path d="M60 46 L52 56 L52 52 L26 52" stroke="#c4a8ff" stroke-width="2.5" stroke-linejoin="round"/>
+  <circle cx="36" cy="40" r="2.5" fill="#c4a8ff"/>
+  <circle cx="43" cy="40" r="2.5" fill="#c4a8ff"/>
+  <circle cx="50" cy="40" r="2.5" fill="#c4a8ff"/>
+</svg>
+      </div>
+      <div class="ej-magic-sector">Clínicas · Tiendas · <span>Servicios al Público</span></div>
+    </div>
+
+    <!-- PROBLEMA → SOLUCIÓN (ocupa el espacio principal) -->
+    <div class="ej-ps-row" style="min-height:0;margin-bottom:3px">
+      <div class="ej-ps-col prob">
+        <div class="ej-ps-col-label prob">El problema</div>
+        <div class="ej-ps-col-text"><strong class="loss">2 personas</strong> pasan toda la mañana respondiendo las mismas preguntas por teléfono y WhatsApp. Horarios, precios, disponibilidad... Las mismas preguntas. Cada día.</div>
+      </div>
+      <div class="ej-ps-arrow-col">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <path d="M6 16 L26 16 M18 8 L26 16 L18 24" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="ej-ps-col sol">
+        <div class="ej-ps-col-label sol">La solución</div>
+        <div class="ej-ps-col-text">Agente de IA en WhatsApp que responde <strong class="gain">24/7 en menos de 1 minuto</strong>, filtra la urgencia y solo escala al equipo cuando de verdad hace falta.</div>
+      </div>
+    </div>
+
+    <!-- NÚMEROS -->
+    <div class="nums-veil ej-nums-row">
+      <div class="ej-num-col l">
+        <div class="ej-num-lbl l">Pierdes al mes</div>
+        <div class="ej-num-val l" data-countup="2800" data-format="money">2.800 €</div>
+        <div class="ej-num-sub">= 33.600 €/año</div>
+      </div>
+      <div style="background:var(--rule)"></div>
+      <div class="ej-num-col f">
+        <div class="ej-num-lbl f">Fee mensual LMNHL</div>
+        <div class="ej-num-val f" data-countup="700" data-format="money">700 €</div>
+        <div class="ej-num-contract">Contrato mínimo 12 meses</div>
+      </div>
+      <div style="background:var(--rule)"></div>
+      <div class="ej-num-col g">
+        <div class="ej-num-lbl g">Te ahorras al mes</div>
+        <div class="ej-num-val g hero-val" data-countup="2100" data-format="money">2.100 €</div>
+        <div class="ej-num-sub">= <strong style="color:var(--lime)">25.200 €/año</strong></div>
+      </div>
+      <div style="background:var(--rule)"></div>
+    <div class="ej-roi-col">
+        <div class="ej-roi-big">300%</div>
+        <div class="ej-roi-lbl">ROI</div>
+        <div class="ej-roi-sub">Retorno sobre la inversión</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ S6 SERVICIOS ══════════════════════════════════════ -->
+<div class="s ej-slide" id="s6" data-magic-reveal="true" style="padding:3.5vh 6vw;justify-content:flex-start">
+  <div class="ej-magic-wrap">
+
+    <!-- CABECERA: ICON + SECTOR -->
+    <div class="ej-magic-header">
+      <div class="ej-magic-icon">
+        <div class="ej-magic-icon-ring"></div>
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+  <path d="M8 28 L32 8 L56 28" stroke="#F59E0B" stroke-width="2.5" stroke-linejoin="round"/>
+  <rect x="12" y="28" width="40" height="30" stroke="#F59E0B" stroke-width="2.5"/>
+  <rect x="22" y="40" width="10" height="18" stroke="#F59E0B" stroke-width="2"/>
+  <rect x="36" y="36" width="10" height="10" fill="rgba(245,158,11,.15)" stroke="#F59E0B" stroke-width="2"/>
+  <path d="M48 20 L48 28" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="52" cy="14" r="5" fill="rgba(255,45,107,.15)" stroke="#FF2D6B" stroke-width="2"/>
+  <path d="M56 16 L60 20" stroke="#FF2D6B" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="58" cy="10" r="3.5" fill="rgba(255,45,107,.12)" stroke="#FF2D6B" stroke-width="2"/>
+</svg>
+      </div>
+      <div class="ej-magic-sector">Agencia <span>Inmobiliaria</span> · 8 personas</div>
+    </div>
+
+    <!-- PROBLEMA → SOLUCIÓN (ocupa el espacio principal) -->
+    <div class="ej-ps-row" style="min-height:0;margin-bottom:3px">
+      <div class="ej-ps-col prob">
+        <div class="ej-ps-col-label prob">El problema</div>
+        <div class="ej-ps-col-text">Los agentes responden leads de Idealista y Fotocasa a mano. El <strong class="loss">40% no recibe respuesta antes de 24h</strong> — y ese lead ya llamó a la competencia.</div>
+      </div>
+      <div class="ej-ps-arrow-col">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <path d="M6 16 L26 16 M18 8 L26 16 L18 24" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="ej-ps-col sol">
+        <div class="ej-ps-col-label sol">La solución</div>
+        <div class="ej-ps-col-text">Agente que responde en <strong class="gain">menos de 1 minuto</strong>, cualifica por presupuesto y zona, y solo escala al agente humano cuando el comprador está listo para visitar.</div>
+      </div>
+    </div>
+
+    <!-- NÚMEROS -->
+    <div class="nums-veil ej-nums-row">
+      <div class="ej-num-col l">
+        <div class="ej-num-lbl l">Pierdes al mes</div>
+        <div class="ej-num-val l" data-countup="3600" data-format="money">3.600 €</div>
+        <div class="ej-num-sub">= 43.200 €/año</div>
+      </div>
+      <div style="background:var(--rule)"></div>
+      <div class="ej-num-col f">
+        <div class="ej-num-lbl f">Fee mensual LMNHL</div>
+        <div class="ej-num-val f" data-countup="900" data-format="money">900 €</div>
+        <div class="ej-num-contract">Contrato mínimo 12 meses</div>
+      </div>
+      <div style="background:var(--rule)"></div>
+      <div class="ej-num-col g">
+        <div class="ej-num-lbl g">Te ahorras al mes</div>
+        <div class="ej-num-val g hero-val" data-countup="2700" data-format="money">2.700 €</div>
+        <div class="ej-num-sub">= <strong style="color:var(--lime)">32.400 €/año</strong></div>
+      </div>
+      <div style="background:var(--rule)"></div>
+    <div class="ej-roi-col">
+        <div class="ej-roi-big">300%</div>
+        <div class="ej-roi-lbl">ROI</div>
+        <div class="ej-roi-sub">Retorno sobre la inversión</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ S7 REGLA 300% ══════════════════════════════════════ -->
+<div class="s" id="s7" style="justify-content:center;padding:5vh 7vw">
+  <div style="position:relative;z-index:2;width:100%;max-width:1100px">
+
+    <div class="eyebrow">Cómo funciona el precio</div>
+
+    <!-- Definición ROI -->
+    <div style="display:inline-flex;align-items:center;gap:1.2rem;background:rgba(255,255,255,.04);border:1px solid var(--rule);padding:.8rem 1.4rem;margin-bottom:2rem">
+      <div style="font-size:1.3rem;font-weight:900;color:var(--lime);letter-spacing:-.04em;flex-shrink:0">ROI</div>
+      <div style="width:1px;height:28px;background:var(--rule)"></div>
+      <div>
+        <div style="font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--txd)">Retorno sobre la Inversión</div>
+        <div style="font-size:1rem;color:var(--tx);font-weight:400;margin-top:.2rem">Por cada euro que metes, ¿cuánto recuperas?</div>
+      </div>
+    </div>
+
+    <!-- Titular -->
+    <div style="font-size:clamp(2rem,4.5vw,5rem);font-weight:900;letter-spacing:-.055em;line-height:.95;margin-bottom:3.5vh">
+      Por cada <span style="color:var(--fee)">€1</span> que inviertes<br>
+      con LMNHL, recuperas <span style="color:var(--lime)">€4.</span>
+    </div>
+
+    <!-- Explicación en una línea -->
+    <div style="font-size:clamp(.95rem,1.2vw,1.15rem);color:var(--txd);font-weight:400;margin-bottom:3vh;line-height:1.6">
+      Si tienes una tarea que le cuesta a tu empresa <strong style="color:var(--tx)">100€ al año</strong>, LMNHL lo resuelve por <strong style="color:var(--fee)">25€</strong>. Los otros <strong style="color:var(--lime)">75€ son tuyos.</strong>
+    </div>
+
+    <!-- BARRA DE PROPORCIÓN -->
+    <div style="margin-bottom:3vh">
+      <div style="display:flex;height:clamp(70px,10vh,105px);gap:4px;border-radius:0">
+
+        <!-- 25% FEE -->
+        <div style="width:25%;background:rgba(196,168,255,.12);border:2px solid var(--fee);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem;flex-shrink:0">
+          <div style="font-size:clamp(1.6rem,3vw,2.8rem);font-weight:900;color:var(--fee);letter-spacing:-.05em;line-height:1">25€</div>
+          <div style="font-size:clamp(.62rem,.75vw,.75rem);letter-spacing:.1em;text-transform:uppercase;color:var(--fee);font-weight:700">pagas a LMNHL</div>
+        </div>
+
+        <!-- 75% AHORRO -->
+        <div style="width:75%;background:rgba(135,178,41,.14);border:2px solid var(--lime);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem">
+          <div style="font-size:clamp(2.4rem,5vw,4.5rem);font-weight:900;color:var(--lime);letter-spacing:-.06em;line-height:1">75€</div>
+          <div style="font-size:clamp(.68rem,.82vw,.85rem);letter-spacing:.1em;text-transform:uppercase;color:var(--lime);font-weight:700">son tuyos — ahorro neto</div>
+        </div>
+
+      </div>
+      <!-- Subtítulo barra -->
+      <div style="display:flex;gap:4px;margin-top:.5rem">
+        <div style="width:25%;text-align:center;font-size:clamp(.7rem,.82vw,.82rem);color:var(--txd)">25% del coste</div>
+        <div style="width:75%;text-align:center;font-size:clamp(.7rem,.82vw,.82rem);color:var(--txd)">75% del coste</div>
+      </div>
+    </div>
+
+    <!-- Takeaway final -->
+    <div style="display:flex;align-items:center;gap:2rem;flex-wrap:wrap">
+      <div style="background:var(--lime);padding:1.1rem 2.2rem;display:inline-flex;flex-direction:column;gap:.2rem">
+        <div style="font-size:clamp(2rem,3.5vw,3.2rem);font-weight:900;color:var(--bg);letter-spacing:-.05em;line-height:1">300%</div>
+        <div style="font-size:clamp(.65rem,.78vw,.78rem);letter-spacing:.12em;text-transform:uppercase;color:rgba(7,4,18,.55);font-weight:700">ROI garantizado</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.5rem;text-align:left">
+        <div style="font-size:clamp(1.05rem,1.3vw,1.25rem);color:var(--txd);font-weight:300;white-space:nowrap">Siempre. Con cualquier cuello de botella. En cualquier sector.</div>
+        <div style="font-size:clamp(1.05rem,1.3vw,1.25rem);color:var(--tx);font-weight:600;white-space:nowrap">No cobramos por horas. Cobramos por el valor que generamos.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ S8 CALCULADORA ════════════════════════════════════ -->
+<div class="s" id="s8">
+  <div class="c8-top">
+    <div class="eyebrow">✦ Conjura tu número</div>
+    <div style="font-size:clamp(1.2rem,2vw,2rem);font-weight:700;letter-spacing:-.03em">¿Cuánto estás perdiendo <em style="color:var(--lime);font-style:italic">tú</em>?</div>
+  </div>
+  <div class="c8-layout">
+    <div class="c8-left">
+      <div class="sl-group">
+        <div class="sl-head">
+          <div class="sl-label">Personas en esa tarea</div>
+          <div class="sl-val"><span id="ve">3</span> <span>personas</span></div>
+        </div>
+        <input type="range" id="se" min="1" max="10" value="3" step="1">
+        <div class="sl-range"><span>1</span><span>10</span></div>
+      </div>
+      <div class="sl-group">
+        <div class="sl-head">
+          <div class="sl-label">Horas al día en esa tarea</div>
+          <div class="sl-val"><span id="vh">3</span> <span>h/día</span></div>
+        </div>
+        <input type="range" id="sh" min="0.5" max="8" value="3" step="0.5">
+        <div class="sl-range"><span>0.5h</span><span>8h</span></div>
+      </div>
+      <div class="sl-group">
+        <div class="sl-head">
+          <div class="sl-label">Salario bruto mensual / persona</div>
+          <div class="sl-val"><span id="vs">2.800</span> <span>€/mes</span></div>
+        </div>
+        <input type="range" id="ss" min="1500" max="6000" value="2800" step="100">
+        <div class="sl-range"><span>1.500 €</span><span>6.000 €</span></div>
+      </div>
+      <div class="c8-note">Coste empresa estimado = salario × 1,35 · 20 días laborables/mes</div>
+    </div>
+    <div class="c8-right">
+      <div class="c8-output-main">
+        <div class="c8-out-label">Coste mensual de esa ineficiencia</div>
+        <div class="c8-out-num" id="ra">—</div>
+        <div class="c8-out-sub">euros al mes que se pierden en esa tarea</div>
+      </div>
+      <div class="c8-output-row rm">
+        <div class="c8-row-label">Coste anual</div>
+        <div class="c8-row-val" id="rm">—</div>
+      </div>
+      <div class="c8-output-row rf">
+        <div class="c8-row-label">Fee mensual LMNHL</div>
+        <div class="c8-row-val" id="rf">—</div>
+      </div>
+      <div class="c8-output-row rg">
+        <div class="c8-row-label">Ahorro neto al año</div>
+        <div class="c8-row-val" id="rg">—</div>
+      </div>
+      <div class="c8-output-row rr">
+        <div class="c8-row-label">ROI garantizado</div>
+        <div class="c8-row-val" id="rr">300%</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S9 POR QUÉ LMNHL ══════════════════════════════════ -->
+<div class="s" id="s9" style="padding:4vh 7vw;justify-content:center">
+  <div style="position:relative;z-index:2;width:100%">
+
+    <div class="eyebrow">✦ Tu consultor tecnológico</div>
+
+    <!-- Titular -->
+    <div style="font-size:clamp(1.8rem,3.8vw,4.2rem);font-weight:900;letter-spacing:-.055em;line-height:.95;margin-bottom:1rem;color:var(--tx)">
+      No contratas tecnología.<br>
+      <span style="color:var(--lime);font-style:italic;font-weight:300">Contratas criterio.</span>
+    </div>
+    <div style="font-size:clamp(.95rem,1.1vw,1.05rem);color:var(--txd);font-weight:400;margin-bottom:2.5vh;max-width:640px;line-height:1.75">
+      Hay miles de herramientas de IA. Algunas te sirven. La mayoría, no. La diferencia entre las dos cosas es conocer tu negocio en profundidad — y estar al día de todo lo que aparece cada semana.
+    </div>
+
+    <!-- 3 COLUMNAS -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-bottom:3px">
+
+      <!-- COLUMNA 1 -->
+      <div style="background:rgba(245,158,11,.07);border-top:3px solid var(--lime);padding:2rem 1.8rem">
+        <div style="margin-bottom:1.2rem">
+          <svg viewBox="0 0 44 44" width="44" height="44" fill="none">
+            <circle cx="22" cy="22" r="20" stroke="#F59E0B" stroke-width="2"/>
+            <polyline points="10,26 16,18 22,24 28,14 34,20" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="34" cy="14" r="3" fill="#F59E0B"/>
+          </svg>
+        </div>
+        <div style="font-size:clamp(1rem,1.5vw,1.4rem);font-weight:800;color:var(--lime);letter-spacing:-.02em;margin-bottom:.7rem;line-height:1.1">Formación constante en IA</div>
+        <div style="font-size:clamp(.85rem,1vw,1rem);color:var(--txd);font-weight:400;line-height:1.65">
+          La IA cambia cada semana. LMNHL se forma constantemente para que el cliente no tenga que hacerlo. Tú diriges tu empresa. Nosotros filtramos lo que te aplica y lo que es ruido.
+        </div>
+      </div>
+
+      <!-- COLUMNA 2 -->
+      <div style="background:rgba(196,168,255,.07);border-top:3px solid var(--fee);padding:2rem 1.8rem">
+        <div style="margin-bottom:1.2rem">
+          <svg viewBox="0 0 44 44" width="44" height="44" fill="none">
+            <rect x="6" y="18" width="32" height="22" stroke="#c4a8ff" stroke-width="2"/>
+            <polygon points="2,18 22,4 42,18" stroke="#c4a8ff" stroke-width="2" fill="none"/>
+            <rect x="16" y="28" width="12" height="12" stroke="#c4a8ff" stroke-width="2"/>
+          </svg>
+        </div>
+        <div style="font-size:clamp(1rem,1.5vw,1.4rem);font-weight:800;color:var(--fee);letter-spacing:-.02em;margin-bottom:.7rem;line-height:1.1">Conocemos tu negocio antes de recomendar nada</div>
+        <div style="font-size:clamp(.85rem,1vw,1rem);color:var(--txd);font-weight:400;line-height:1.65">
+          No hay solución estándar. Primero entendemos cómo trabajas, qué procesos tienes, dónde pierdes tiempo. Solo después proponemos — y solo lo que tiene ROI demostrable para tu caso concreto.
+        </div>
+      </div>
+
+      <!-- COLUMNA 3 -->
+      <div style="background:rgba(255,53,100,.06);border-top:3px solid var(--loss);padding:2rem 1.8rem">
+        <div style="margin-bottom:1.2rem">
+          <svg viewBox="0 0 44 44" width="44" height="44" fill="none">
+            <path d="M22 4 L22 8 M22 36 L22 40 M4 22 L8 22 M36 22 L40 22" stroke="#FF2D6B" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="22" cy="22" r="10" stroke="#FF2D6B" stroke-width="2"/>
+            <circle cx="22" cy="22" r="4" fill="#FF2D6B"/>
+            <path d="M9 9 L13 13 M31 31 L35 35 M35 9 L31 13 M13 31 L9 35" stroke="#FF2D6B" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div style="font-size:clamp(1rem,1.5vw,1.4rem);font-weight:800;color:var(--loss);letter-spacing:-.02em;margin-bottom:.7rem;line-height:1.1">Cumplimiento normativo incluido</div>
+        <div style="font-size:clamp(.85rem,1vw,1rem);color:var(--txd);font-weight:400;line-height:1.65">
+          La IA en empresas tiene implicaciones legales: RGPD, Reglamento Europeo de IA, privacidad de datos. Todo lo que se implementa cumple con la normativa vigente — y se actualiza cuando la normativa cambia.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- BANNER — el resultado ────────────────────── -->
+    <div style="background:var(--bg3,#0c0728);border:1px solid var(--rule);padding:1.4rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap">
+      <div>
+        <div style="font-size:clamp(.95rem,1.15vw,1.1rem);color:var(--tx);font-weight:600;line-height:1.5;margin-bottom:.8rem">
+          El fee mensual no es solo una aplicación.<br>
+          <span style="color:var(--txd);font-weight:400">Es tener un equipo de IA activo trabajando por tu empresa continuamente.</span>
+        </div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <span style="font-size:.75rem;padding:.3rem .8rem;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:var(--lime)">✦ Aplicaciones a medida</span>
+          <span style="font-size:.75rem;padding:.3rem .8rem;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:var(--lime)">✦ Actualizaciones continuas</span>
+          <span style="font-size:.75rem;padding:.3rem .8rem;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:var(--lime)">✦ Nuevas automatizaciones</span>
+          <span style="font-size:.75rem;padding:.3rem .8rem;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:var(--lime)">✦ Adaptación normativa</span>
+          <span style="font-size:.75rem;padding:.3rem .8rem;background:rgba(196,168,255,.12);border:1px solid rgba(196,168,255,.3);color:var(--fee)">Contrato mínimo 12 meses</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:2.5rem;flex-shrink:0;flex-wrap:wrap">
+        <div style="text-align:center">
+          <div style="font-size:clamp(1.3rem,2.2vw,2rem);font-weight:900;color:var(--lime);letter-spacing:-.04em;line-height:1">100%</div>
+          <div style="font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--txd);margin-top:.2rem">sector servicios</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:clamp(1.3rem,2.2vw,2rem);font-weight:900;color:var(--lime);letter-spacing:-.04em;line-height:1">40 min</div>
+          <div style="font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--txd);margin-top:.2rem">para conocer tu caso</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:clamp(1.3rem,2.2vw,2rem);font-weight:900;color:var(--lime);letter-spacing:-.04em;line-height:1">0€</div>
+          <div style="font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--txd);margin-top:.2rem">si no hay ROI real</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ S10 CTA ════════════════════════════════════════════ -->
+<div class="s" id="s10">
+  <div class="s10-blobs"><div class="s10-b1"></div><div class="s10-b2"></div></div>
+  <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" style="position:absolute;pointer-events:none;z-index:0;left:6%;top:50%;transform:translateY(-50%);width:min(16vw,175px);opacity:.18;">
+  <circle cx="120" cy="120" r="112" fill="none" stroke="#87B229" stroke-width="3"/>
+  <circle cx="120" cy="120" r="102" fill="none" stroke="#87B229" stroke-width="1" opacity=".3"/>
+  <line x1="120" y1="12" x2="120" y2="28" stroke="#87B229" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="120" y1="212" x2="120" y2="228" stroke="#87B229" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="12" y1="120" x2="28" y2="120" stroke="#87B229" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="212" y1="120" x2="228" y2="120" stroke="#87B229" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="33" y1="33" x2="44" y2="44" stroke="#87B229" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="196" y1="33" x2="207" y2="44" stroke="#87B229" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="33" y1="207" x2="44" y2="196" stroke="#87B229" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="196" y1="207" x2="207" y2="196" stroke="#87B229" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="120" y1="120" x2="120" y2="52" stroke="#87B229" stroke-width="6" stroke-linecap="round"/>
+  <line x1="120" y1="120" x2="51" y2="160" stroke="#87B229" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="120" cy="120" r="7" fill="#87B229"/>
+  <path d="M120,20 a100,100 0 0,1 86.6,50" fill="none" stroke="#FF3564" stroke-width="3" stroke-dasharray="8 5" opacity=".6"/>
+</svg><div class="s10-inner">
+    <div class="s10-ey">✦ La magia no existe — los resultados, sí ✦</div>
+    <div class="s10-h">40<br>minutos.<br><em>Sin trucos.</em><br>Solo números.</div>
+    <div class="s10-body">Una sesión de diagnóstico gratuita. Identificamos el cuello de botella más costoso y calculamos exactamente cuánto te está costando — en euros, sin estimaciones.</div>
+    <a href="mailto:hola@losmartesnohayluna.com" class="cta-btn">Habla con un consultor IA →</a>
+    <div class="s10-contact">
+      <span><a href="mailto:hola@losmartesnohayluna.com">hola@losmartesnohayluna.com</a></span>
+      <span>Los Martes No Hay Luna · Madrid</span>
+    </div>
+    <div class="s10-stats">
+      <div class="s10-stat"><div class="n">40 min</div><div class="l">Sin coste</div></div>
+      <div class="s10-stat"><div class="n">300%</div><div class="l">ROI mínimo</div></div>
+      <div class="s10-stat"><div class="n">0 €</div><div class="l">Sin compromiso</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+
+<!-- ═══ S11 INTRO SECTORES ══════════════════════════════════════ -->
+<div class="s" id="s11" style="justify-content:center;align-items:center;text-align:center">
+  <div style="position:relative;z-index:2;max-width:900px">
+    <div class="eyebrow" style="justify-content:center">✦ Referencia completa</div>
+    <div style="font-size:clamp(2.5rem,6vw,6.5rem);font-weight:900;letter-spacing:-.06em;line-height:.9;margin-bottom:1.5rem;color:var(--tx)">
+      35+ aplicaciones<br><em style="color:var(--lime);font-style:italic;font-weight:300">concretas por sector.</em>
+    </div>
+    <p style="font-size:1rem;color:var(--txd);font-weight:300;max-width:520px;margin:0 auto 3rem;line-height:1.8">Todo lo que se puede automatizar con IA en empresas de servicios. Procesos reales, tiempos reales, ahorros reales.</p>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:3px;max-width:800px;margin:0 auto">
+      <div style="padding:1rem;background:rgba(255,255,255,.04);border-top:2px solid var(--lime);font-size:.78rem;font-weight:600;color:var(--tx)">Gestoría<br><span style="color:var(--txd);font-weight:300;font-size:.7rem">y asesoría fiscal</span></div>
+      <div style="padding:1rem;background:rgba(255,255,255,.04);border-top:2px solid var(--lime);font-size:.78rem;font-weight:600;color:var(--tx)">Inmobiliaria<br><span style="color:var(--txd);font-weight:300;font-size:.7rem">ya en la presentación</span></div>
+      <div style="padding:1rem;background:rgba(255,255,255,.04);border-top:2px solid var(--lime);font-size:.78rem;font-weight:600;color:var(--tx)">Clínica<br><span style="color:var(--txd);font-weight:300;font-size:.7rem">salud y estética</span></div>
+      <div style="padding:1rem;background:rgba(255,255,255,.04);border-top:2px solid var(--lime);font-size:.78rem;font-weight:600;color:var(--tx)">Reformas<br><span style="color:var(--txd);font-weight:300;font-size:.7rem">y construcción</span></div>
+      <div style="padding:1rem;background:rgba(255,255,255,.04);border-top:2px solid var(--fee);font-size:.78rem;font-weight:600;color:var(--tx)">Academia<br><span style="color:var(--txd);font-weight:300;font-size:.7rem">y formación</span></div>
+      <div style="padding:1rem;background:rgba(255,255,255,.04);border-top:2px solid var(--fee);font-size:.78rem;font-weight:600;color:var(--tx)">Consultoría<br><span style="color:var(--txd);font-weight:300;font-size:.7rem">y agencias</span></div>
+      <div style="padding:1rem;background:rgba(255,255,255,.04);border-top:2px solid var(--fee);font-size:.78rem;font-weight:600;color:var(--tx)">Hostelería<br><span style="color:var(--txd);font-weight:300;font-size:.7rem">y restauración</span></div>
+      <div style="padding:1rem;background:rgba(255,255,255,.04);border-top:2px solid var(--fee);font-size:.78rem;font-weight:600;color:var(--tx)">RRHH<br><span style="color:var(--txd);font-weight:300;font-size:.7rem">selección y gestión</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S12 GESTORÍA ══════════════════════════════════════════════ -->
+<div class="s" id="s12" style="padding:4vh 7vw;justify-content:center">
+  <div style="position:relative;z-index:2;width:100%">
+    <div class="eyebrow">Sector · Gestoría y Asesoría Fiscal</div>
+    <div style="font-size:clamp(1.6rem,3vw,3rem);font-weight:800;letter-spacing:-.04em;margin-bottom:2vh;color:var(--tx)">Las tareas que más tiempo roban — y lo que las reemplaza</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px">
+      <div style="display:flex;flex-direction:column;gap:3px">
+        <div style="background:rgba(255,53,100,.07);border-left:3px solid var(--loss);padding:1.4rem 1.6rem">
+          <div style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--loss);margin-bottom:.5rem">Cuello 01 · Facturas manuales</div>
+          <div style="font-size:.95rem;font-weight:600;color:var(--tx);margin-bottom:.3rem">3h/día de registro manual → 14.400 €/año</div>
+          <div style="font-size:.82rem;color:var(--txd);line-height:1.6">IA: extrae datos del PDF, clasifica, registra en Holded/Sage/Anfix y cumple con VeriFactu 2026. De 3h a 20 minutos.</div>
+        </div>
+        <div style="background:rgba(255,53,100,.07);border-left:3px solid var(--loss);padding:1.4rem 1.6rem">
+          <div style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--loss);margin-bottom:.5rem">Cuello 02 · Llamadas de clientes</div>
+          <div style="font-size:.95rem;font-weight:600;color:var(--tx);margin-bottom:.3rem">40 llamadas/día sobre estado de trámites → 9.600 €/año</div>
+          <div style="font-size:.82rem;color:var(--txd);line-height:1.6">Agente WhatsApp que responde: "¿está mi declaración?", "¿qué documentos necesito?", disponible 24/7 sin intervención del técnico.</div>
+        </div>
+        <div style="background:rgba(255,53,100,.07);border-left:3px solid var(--loss);padding:1.4rem 1.6rem">
+          <div style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--loss);margin-bottom:.5rem">Cuello 03 · Informes trimestrales</div>
+          <div style="font-size:.95rem;font-weight:600;color:var(--tx);margin-bottom:.3rem">2 días por cliente → 18.000 €/año</div>
+          <div style="font-size:.82rem;color:var(--txd);line-height:1.6">IA consolida datos, genera informe con comparativa y resumen ejecutivo. El técnico revisa en 30 minutos, no en 2 días.</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:3px">
+        <div style="background:rgba(245,158,11,.07);border-left:3px solid var(--lime);padding:1.4rem 1.6rem">
+          <div style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--lime);margin-bottom:.5rem">Cuello 04 · Recordatorios de vencimientos</div>
+          <div style="font-size:.95rem;font-weight:600;color:var(--tx);margin-bottom:.3rem">Avisos manuales → sanciones evitadas</div>
+          <div style="font-size:.82rem;color:var(--txd);line-height:1.6">Sistema automático que detecta vencimientos (IVA, IRPF, IS, SS) y envía aviso con checklist de documentación 15 días antes. Cero avisos perdidos.</div>
+        </div>
+        <div style="background:rgba(245,158,11,.08);border-left:3px solid var(--lime);padding:1.8rem 1.6rem;flex:1;display:flex;flex-direction:column;justify-content:center">
+          <div style="font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--txd);margin-bottom:1rem">ROI típico del sector</div>
+          <div style="display:flex;gap:2rem;flex-wrap:wrap">
+            <div><div style="font-size:2.2rem;font-weight:900;color:var(--lime);letter-spacing:-.05em;line-height:1">14.400€</div><div style="font-size:.65rem;color:var(--txd);margin-top:.2rem">ahorro anual mínimo</div></div>
+            <div><div style="font-size:2.2rem;font-weight:900;color:var(--fee);letter-spacing:-.05em;line-height:1">300€</div><div style="font-size:.65rem;color:var(--txd);margin-top:.2rem">fee mensual LMNHL</div></div>
+            <div style="background:var(--lime);padding:.8rem 1.2rem;align-self:center"><div style="font-size:1.4rem;font-weight:900;color:var(--bg);letter-spacing:-.04em">300%</div><div style="font-size:.55rem;color:rgba(2,1,12,.5);text-transform:uppercase;letter-spacing:.1em">ROI</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S13 CLÍNICA ═══════════════════════════════════════════════ -->
+<div class="s" id="s13" style="padding:4vh 7vw;justify-content:center">
+  <div style="position:relative;z-index:2;width:100%">
+    <div class="eyebrow">Sector · Clínica · Salud · Estética</div>
+    <div style="font-size:clamp(1.6rem,3vw,3rem);font-weight:800;letter-spacing:-.04em;margin-bottom:2vh;color:var(--tx)">Clínica dental o estética · 6 personas</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px">
+      <div style="display:flex;flex-direction:column;gap:3px">
+        <div style="background:rgba(255,53,100,.07);border-left:3px solid var(--loss);padding:1.4rem 1.6rem">
+          <div style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--loss);margin-bottom:.5rem">Cuello 01 · Atención telefónica</div>
+          <div style="font-size:.95rem;font-weight:600;color:var(--tx);margin-bottom:.3rem">4h/día respondiendo siempre lo mismo → 16.800 €/año</div>
+          <div style="font-size:.82rem;color:var(--txd);line-height:1.6">Agente WhatsApp que informa sobre precios, disponibilidad y tratamientos. Agenda directamente en el sistema. Disponible cuando la clínica está cerrada.</div>
+        </div>
+        <div style="background:rgba(255,53,100,.07);border-left:3px solid var(--loss);padding:1.4rem 1.6rem">
+          <div style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--loss);margin-bottom:.5rem">Cuello 02 · Confirmación de citas</div>
+          <div style="font-size:.95rem;font-weight:600;color:var(--tx);margin-bottom:.3rem">2h/día en llamadas de confirmación → 9.600 €/año</div>
+          <div style="font-size:.82rem;color:var(--txd);line-height:1.6">Recordatorio automático 24h + 2h antes. Si cancela, el hueco se ofrece a lista de espera. Reduce no-shows un 40–60%.</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:3px">
+        <div style="background:rgba(245,158,11,.07);border-left:3px solid var(--lime);padding:1.4rem 1.6rem">
+          <div style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--lime);margin-bottom:.5rem">Cuello 03 · Reactivación de pacientes</div>
+          <div style="font-size:.95rem;font-weight:600;color:var(--tx);margin-bottom:.3rem">Pacientes que no vuelven → 0 seguimiento</div>
+          <div style="font-size:.82rem;color:var(--txd);line-height:1.6">Secuencia automática a pacientes sin cita en 6 meses con oferta personalizada. Clínicas que lo implementan: +20-35% de reactivación.</div>
+        </div>
+        <div style="background:rgba(245,158,11,.07);border-left:3px solid var(--lime);padding:1.4rem 1.6rem">
+          <div style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--lime);margin-bottom:.5rem">Cuello 04 · Reseñas Google</div>
+          <div style="font-size:.95rem;font-weight:600;color:var(--tx);margin-bottom:.3rem">12 reseñas → 80+ reseñas en 6 meses</div>
+          <div style="font-size:.82rem;color:var(--txd);line-height:1.6">48h después de cada visita: mensaje de agradecimiento + enlace directo a Google. 0 esfuerzo manual. Impacto directo en captación orgánica.</div>
+        </div>
+        <div style="background:rgba(245,158,11,.09);border-left:3px solid var(--lime);padding:1.5rem 1.6rem;display:flex;gap:2rem;align-items:center;flex-wrap:wrap">
+          <div><div style="font-size:2rem;font-weight:900;color:var(--lime);letter-spacing:-.05em;line-height:1">16.800€</div><div style="font-size:.65rem;color:var(--txd)">ahorro anual mínimo</div></div>
+          <div><div style="font-size:2rem;font-weight:900;color:var(--fee);letter-spacing:-.05em;line-height:1">350€</div><div style="font-size:.65rem;color:var(--txd)">fee mensual LMNHL</div></div>
+          <div style="background:var(--lime);padding:.8rem 1.2rem"><div style="font-size:1.4rem;font-weight:900;color:var(--bg);letter-spacing:-.04em">300%</div><div style="font-size:.55rem;color:rgba(2,1,12,.5);text-transform:uppercase;letter-spacing:.1em">ROI</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S14 REFORMAS ══════════════════════════════════════════════ -->
+<div class="s" id="s14" style="padding:4vh 7vw;justify-content:center">
+  <div style="position:relative;z-index:2;width:100%">
+    <div class="eyebrow">Sector · Reformas y Construcción</div>
+    <div style="font-size:clamp(1.6rem,3vw,3rem);font-weight:800;letter-spacing:-.04em;margin-bottom:2vh;color:var(--tx)">Empresa de reformas integrales · 10 personas</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px">
+      <div style="background:rgba(255,53,100,.07);border-left:3px solid var(--loss);padding:1.5rem 1.6rem">
+        <div style="font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--loss);margin-bottom:.6rem">Presupuestos manuales</div>
+        <div style="font-size:1.5rem;font-weight:900;color:var(--loss);letter-spacing:-.04em;line-height:1;margin-bottom:.4rem">27.360€</div>
+        <div style="font-size:.75rem;color:var(--txd);line-height:1.5;margin-bottom:.8rem">al año en tiempo de técnico. 3 días por presupuesto × 12 presupuestos/mes.</div>
+        <div style="font-size:.8rem;color:var(--tx);font-weight:400;line-height:1.5">IA: el técnico introduce medidas básicas → presupuesto formateado y listo en 2 horas. No en 3 días.</div>
+      </div>
+      <div style="background:rgba(255,53,100,.07);border-left:3px solid var(--loss);padding:1.5rem 1.6rem">
+        <div style="font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--loss);margin-bottom:.6rem">Seguimiento manual</div>
+        <div style="font-size:1.5rem;font-weight:900;color:var(--loss);letter-spacing:-.04em;line-height:1;margin-bottom:.4rem">6.000€</div>
+        <div style="font-size:.75rem;color:var(--txd);line-height:1.5;margin-bottom:.8rem">al año en llamadas de seguimiento sin contexto.</div>
+        <div style="font-size:.8rem;color:var(--tx);font-weight:400;line-height:1.5">Secuencia automática: email 2 días, WhatsApp 5 días, llamada sugerida al 10. Tasa de cierre +20-30%.</div>
+      </div>
+      <div style="background:rgba(245,158,11,.07);border-left:3px solid var(--lime);padding:1.5rem 1.6rem">
+        <div style="font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--lime);margin-bottom:.6rem">Partes de trabajo en papel</div>
+        <div style="font-size:1.5rem;font-weight:900;color:var(--lime);letter-spacing:-.04em;line-height:1;margin-bottom:.4rem">6.000€</div>
+        <div style="font-size:.75rem;color:var(--txd);line-height:1.5;margin-bottom:.8rem">al año en tiempo del encargado recopilando partes.</div>
+        <div style="font-size:.8rem;color:var(--tx);font-weight:400;line-height:1.5">El operario rellena desde el móvil → aprobación con un clic → dato en facturación automáticamente.</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:3rem;background:rgba(255,255,255,.03);border:1px solid var(--rule);padding:1.5rem 2rem;margin-top:3px;flex-wrap:wrap">
+      <div><div style="font-size:2rem;font-weight:900;color:var(--loss);letter-spacing:-.04em;line-height:1">27.360€/año</div><div style="font-size:.68rem;color:var(--txd)">solo en presupuestación</div></div>
+      <div style="color:var(--txd);font-size:1.5rem">→</div>
+      <div><div style="font-size:2rem;font-weight:900;color:var(--fee);letter-spacing:-.04em;line-height:1">570€/mes</div><div style="font-size:.68rem;color:var(--txd)">fee mensual LMNHL</div></div>
+      <div style="color:var(--txd);font-size:1.5rem">→</div>
+      <div><div style="font-size:2rem;font-weight:900;color:var(--lime);letter-spacing:-.04em;line-height:1">20.520€/año</div><div style="font-size:.68rem;color:var(--txd)">ahorro neto</div></div>
+      <div style="background:var(--lime);padding:.8rem 1.5rem;margin-left:auto"><div style="font-size:1.6rem;font-weight:900;color:var(--bg);letter-spacing:-.04em">300% ROI</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S15 ACADEMIA ══════════════════════════════════════════════ -->
+<div class="s" id="s15" style="padding:4vh 7vw;justify-content:center">
+  <div style="position:relative;z-index:2;width:100%">
+    <div class="eyebrow">Sector · Academia y Formación</div>
+    <div style="font-size:clamp(1.6rem,3vw,3rem);font-weight:800;letter-spacing:-.04em;margin-bottom:2vh;color:var(--tx)">Centro de formación · 5 personas · 150 alumnos activos</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px">
+      <div style="display:flex;flex-direction:column;gap:3px">
+        <div style="background:rgba(255,53,100,.07);border-left:3px solid var(--loss);padding:1.4rem 1.6rem">
+          <div style="font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--loss);margin-bottom:.5rem">Info repetitiva a nuevos alumnos</div>
+          <div style="font-size:.92rem;font-weight:600;color:var(--tx);margin-bottom:.3rem">3h/día respondiendo cursos, precios, horarios → 12.000€/año</div>
+          <div style="font-size:.8rem;color:var(--txd);line-height:1.6">Chatbot en web e Instagram que responde, compara opciones y deriva al equipo solo para matricular.</div>
+        </div>
+        <div style="background:rgba(255,53,100,.07);border-left:3px solid var(--loss);padding:1.4rem 1.6rem">
+          <div style="font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--loss);margin-bottom:.5rem">Matriculación manual</div>
+          <div style="font-size:.92rem;font-weight:600;color:var(--tx);margin-bottom:.3rem">30 min por alumno → 7.200€/año</div>
+          <div style="font-size:.8rem;color:var(--txd);line-height:1.6">Formulario web → CRM → bienvenida automática → acceso al campus → factura. Sin intervención manual.</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:3px">
+        <div style="background:rgba(245,158,11,.07);border-left:3px solid var(--lime);padding:1.4rem 1.6rem">
+          <div style="font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--lime);margin-bottom:.5rem">Abandono de alumnos sin seguimiento</div>
+          <div style="font-size:.92rem;font-weight:600;color:var(--tx);margin-bottom:.3rem">30% de alumnos abandona sin terminar</div>
+          <div style="font-size:.8rem;color:var(--txd);line-height:1.6">Agente que detecta inactividad y envía mensaje personalizado. Academias que lo implementan: reducción de abandono del 20-35%.</div>
+        </div>
+        <div style="background:rgba(245,158,11,.07);border-left:3px solid var(--lime);padding:1.4rem 1.6rem">
+          <div style="font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--lime);margin-bottom:.5rem">Certificados generados a mano</div>
+          <div style="font-size:.92rem;font-weight:600;color:var(--tx);margin-bottom:.3rem">20 min por diploma → tiempo de administración</div>
+          <div style="font-size:.8rem;color:var(--txd);line-height:1.6">Alumno completa el curso → diploma generado automáticamente desde plantilla y enviado por email en minutos.</div>
+        </div>
+        <div style="background:rgba(245,158,11,.09);padding:1.2rem 1.6rem;display:flex;gap:2rem;align-items:center">
+          <div><div style="font-size:1.8rem;font-weight:900;color:var(--lime);letter-spacing:-.04em;line-height:1">11.250€</div><div style="font-size:.62rem;color:var(--txd)">ahorro anual</div></div>
+          <div><div style="font-size:1.8rem;font-weight:900;color:var(--fee);letter-spacing:-.04em;line-height:1">235€/mes</div><div style="font-size:.62rem;color:var(--txd)">fee LMNHL</div></div>
+          <div style="background:var(--lime);padding:.7rem 1rem"><div style="font-size:1.3rem;font-weight:900;color:var(--bg)">300%</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S16 CONSULTORÍA ═══════════════════════════════════════════ -->
+<div class="s" id="s16" style="padding:4vh 7vw;justify-content:center">
+  <div style="position:relative;z-index:2;width:100%">
+    <div class="eyebrow">Sector · Consultoría y Agencia de Servicios</div>
+    <div style="font-size:clamp(1.6rem,3vw,3rem);font-weight:800;letter-spacing:-.04em;margin-bottom:2vh;color:var(--tx)">Agencia de marketing o consultoría · 8 personas</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px">
+      <div style="background:rgba(255,53,100,.07);border-left:3px solid var(--loss);padding:1.5rem 1.6rem">
+        <div style="font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--loss);margin-bottom:.6rem">Informes mensuales a mano</div>
+        <div style="font-size:1.5rem;font-weight:900;color:var(--loss);letter-spacing:-.04em;line-height:1;margin-bottom:.4rem">18.000€</div>
+        <div style="font-size:.75rem;color:var(--txd);line-height:1.5;margin-bottom:.8rem">al año. 2 días por informe, 1 analista por cliente.</div>
+        <div style="font-size:.8rem;color:var(--tx);line-height:1.5">IA conectada a Google Analytics, Meta Ads y CRM. Genera el informe con diseño de la agencia. De 2 días a 2 horas.</div>
+      </div>
+      <div style="background:rgba(255,53,100,.07);border-left:3px solid var(--loss);padding:1.5rem 1.6rem">
+        <div style="font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--loss);margin-bottom:.6rem">Seguimiento de prospects</div>
+        <div style="font-size:1.5rem;font-weight:900;color:var(--loss);letter-spacing:-.04em;line-height:1;margin-bottom:.4rem">13.500€</div>
+        <div style="font-size:.75rem;color:var(--txd);line-height:1.5;margin-bottom:.8rem">al año. 3h/día del account en emails manuales.</div>
+        <div style="font-size:.8rem;color:var(--tx);line-height:1.5">Secuencia automática post-propuesta: email de valor +2 días, recordatorio +5, llamada sugerida +10.</div>
+      </div>
+      <div style="background:rgba(245,158,11,.07);border-left:3px solid var(--lime);padding:1.5rem 1.6rem">
+        <div style="font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--lime);margin-bottom:.6rem">Propuestas desde cero</div>
+        <div style="font-size:1.5rem;font-weight:900;color:var(--lime);letter-spacing:-.04em;line-height:1;margin-bottom:.4rem">12.000€</div>
+        <div style="font-size:.75rem;color:var(--txd);line-height:1.5;margin-bottom:.8rem">al año. 3 días por propuesta × 2 propuestas/semana.</div>
+        <div style="font-size:.8rem;color:var(--tx);line-height:1.5">Briefing → IA genera propuesta completa (estructura, argumentos, casos relevantes, presupuesto). De 3 días a 1 hora.</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:3rem;background:rgba(255,255,255,.03);border:1px solid var(--rule);padding:1.5rem 2rem;margin-top:3px;flex-wrap:wrap">
+      <div><div style="font-size:2rem;font-weight:900;color:var(--loss);letter-spacing:-.04em;line-height:1">43.500€/año</div><div style="font-size:.68rem;color:var(--txd)">coste total de los 3 cuellos</div></div>
+      <div style="color:var(--txd);font-size:1.5rem">→</div>
+      <div><div style="font-size:2rem;font-weight:900;color:var(--fee);letter-spacing:-.04em;line-height:1">906€/mes</div><div style="font-size:.68rem;color:var(--txd)">fee mensual LMNHL</div></div>
+      <div style="color:var(--txd);font-size:1.5rem">→</div>
+      <div><div style="font-size:2rem;font-weight:900;color:var(--lime);letter-spacing:-.04em;line-height:1">32.625€/año</div><div style="font-size:.68rem;color:var(--txd)">ahorro neto</div></div>
+      <div style="background:var(--lime);padding:.8rem 1.5rem;margin-left:auto"><div style="font-size:1.6rem;font-weight:900;color:var(--bg);letter-spacing:-.04em">300% ROI</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S17 HOSTELERÍA + RRHH ═════════════════════════════════════ -->
+<div class="s" id="s17" style="padding:4vh 7vw;justify-content:center">
+  <div style="position:relative;z-index:2;width:100%">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;height:100%">
+      <!-- HOSTELERÍA -->
+      <div>
+        <div class="eyebrow">Sector · Hostelería</div>
+        <div style="font-size:clamp(1.2rem,2vw,2rem);font-weight:800;letter-spacing:-.03em;margin-bottom:1.5vh;color:var(--tx)">Restaurante o hotel · 15 personas</div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div style="background:rgba(255,53,100,.07);border-left:3px solid var(--loss);padding:1.2rem 1.4rem">
+            <div style="font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--loss);margin-bottom:.3rem">Gestión de reservas manual · 9.600€/año</div>
+            <div style="font-size:.82rem;color:var(--txd);line-height:1.5">Agente que reserva 24/7, confirma, gestiona cambios y lista de espera. Integrable con TheFork.</div>
+          </div>
+          <div style="background:rgba(245,158,11,.07);border-left:3px solid var(--lime);padding:1.2rem 1.4rem">
+            <div style="font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--lime);margin-bottom:.3rem">Sin sistema de reseñas · Reputación perdida</div>
+            <div style="font-size:.82rem;color:var(--txd);line-height:1.5">30 min después del cierre: mensaje de agradecimiento + Google. Multiplica reseñas ×4 en 3 meses.</div>
+          </div>
+          <div style="background:rgba(245,158,11,.07);border-left:3px solid var(--lime);padding:1.2rem 1.4rem">
+            <div style="font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--lime);margin-bottom:.3rem">Turnos manuales · 5.400€/año</div>
+            <div style="font-size:.82rem;color:var(--txd);line-height:1.5">Sistema automático que cruza reservas + disponibilidad del equipo y genera el turno con notificación a cada empleado.</div>
+          </div>
+          <div style="background:rgba(245,158,11,.09);padding:1rem 1.4rem;display:flex;gap:1.5rem;align-items:center">
+            <div><div style="font-size:1.5rem;font-weight:900;color:var(--lime);letter-spacing:-.04em">7.200€</div><div style="font-size:.6rem;color:var(--txd)">ahorro anual</div></div>
+            <div><div style="font-size:1.5rem;font-weight:900;color:var(--fee);letter-spacing:-.04em">150€/mes</div><div style="font-size:.6rem;color:var(--txd)">fee</div></div>
+            <div style="background:var(--lime);padding:.6rem .9rem"><div style="font-size:1.1rem;font-weight:900;color:var(--bg)">300%</div></div>
+          </div>
+        </div>
+      </div>
+      <!-- RRHH -->
+      <div>
+        <div class="eyebrow">Sector · RRHH y Selección</div>
+        <div style="font-size:clamp(1.2rem,2vw,2rem);font-weight:800;letter-spacing:-.03em;margin-bottom:1.5vh;color:var(--tx)">Empresa con RRHH activo · 40+ empleados</div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div style="background:rgba(255,53,100,.07);border-left:3px solid var(--loss);padding:1.2rem 1.4rem">
+            <div style="font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--loss);margin-bottom:.3rem">Cribado manual de CVs · 14.400€/año</div>
+            <div style="font-size:.82rem;color:var(--txd);line-height:1.5">IA evalúa CVs según criterios del puesto, puntúa y responde a candidatos. El técnico solo hace entrevistas. De 5h a 30 min por proceso.</div>
+          </div>
+          <div style="background:rgba(255,53,100,.07);border-left:3px solid var(--loss);padding:1.2rem 1.4rem">
+            <div style="font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--loss);margin-bottom:.3rem">Consultas de empleados · 9.600€/año</div>
+            <div style="font-size:.82rem;color:var(--txd);line-height:1.5">Agente que responde: vacaciones pendientes, políticas internas, estado de nóminas. 25 consultas/día → automático.</div>
+          </div>
+          <div style="background:rgba(245,158,11,.07);border-left:3px solid var(--lime);padding:1.2rem 1.4rem">
+            <div style="font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--lime);margin-bottom:.3rem">Onboarding manual · 12.000€/año</div>
+            <div style="font-size:.82rem;color:var(--txd);line-height:1.5">Nueva incorporación → contrato firma digital → accesos → bienvenida personalizada → agenda primera semana. Todo automático.</div>
+          </div>
+          <div style="background:rgba(245,158,11,.09);padding:1rem 1.4rem;display:flex;gap:1.5rem;align-items:center">
+            <div><div style="font-size:1.5rem;font-weight:900;color:var(--lime);letter-spacing:-.04em">21.000€</div><div style="font-size:.6rem;color:var(--txd)">ahorro anual</div></div>
+            <div><div style="font-size:1.5rem;font-weight:900;color:var(--fee);letter-spacing:-.04em">440€/mes</div><div style="font-size:.6rem;color:var(--txd)">fee</div></div>
+            <div style="background:var(--lime);padding:.6rem .9rem"><div style="font-size:1.1rem;font-weight:900;color:var(--bg)">300%</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav class="nav">
+  <button class="nbtn" id="bp" onclick="go(-1)" disabled>←</button>
+  <div class="dots" id="dots"></div>
+  <div class="ctr"><span id="nc">1</span>/<span id="nt">10</span></div>
+  <button class="nbtn" id="bn" onclick="go(1)">→</button>
+</nav>
+</div>
+
+<script>
+
+// ── CAMPO DE ESTRELLAS ─────────────────────────────────────────────
+(function(){
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes twinkle{0%,100%{filter:brightness(1)}50%{filter:brightness(0.05)}}
+    @keyframes twinkle-gold{0%,100%{filter:brightness(1) drop-shadow(0 0 3px #F59E0B)}50%{filter:brightness(0.2) drop-shadow(0 0 1px #F59E0B)}}
+    @keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    #starfield{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+    .star{position:absolute;border-radius:50%;background:#fff}
+    .star-gold{position:absolute;border-radius:50%;background:#F59E0B}
+    .sparkle{position:absolute;font-size:12px;color:#F59E0B;opacity:.25;animation:twinkle-gold 4s ease-in-out infinite;user-select:none;pointer-events:none}
+  `;
+  document.head.appendChild(style);
+
+  const sf = document.createElement('div');
+  sf.id = 'starfield';
+
+  // Estrellas blancas pequeñas (120)
+  for(let i=0;i<120;i++){
+    const s = document.createElement('div');
+    const size = Math.random()<.7 ? Math.random()*1.2+.4 : Math.random()*1.8+1.2;
+    const op = (Math.random()*.65+.15).toFixed(2);
+    const dur = (Math.random()*4+2).toFixed(1);
+    const del = (Math.random()*7).toFixed(1);
+    s.className='star';
+    s.style.cssText=`left:${(Math.random()*100).toFixed(2)}%;top:${(Math.random()*100).toFixed(2)}%;width:${size.toFixed(1)}px;height:${size.toFixed(1)}px;opacity:${op};animation:twinkle ${dur}s ease-in-out ${del}s infinite`;
+    sf.appendChild(s);
+  }
+
+  // Estrellas doradas brillantes (15)
+  for(let i=0;i<15;i++){
+    const s = document.createElement('div');
+    const size = (Math.random()*2+2).toFixed(1);
+    const op = (Math.random()*.5+.3).toFixed(2);
+    const dur = (Math.random()*3+2).toFixed(1);
+    const del = (Math.random()*5).toFixed(1);
+    s.className='star-gold';
+    s.style.cssText=`left:${(Math.random()*100).toFixed(2)}%;top:${(Math.random()*100).toFixed(2)}%;width:${size}px;height:${size}px;opacity:${op};box-shadow:0 0 ${Math.floor(Math.random()*6+3)}px rgba(245,158,11,.7);animation:twinkle-gold ${dur}s ease-in-out ${del}s infinite`;
+    sf.appendChild(s);
+  }
+
+  // Destellos ✦ dispersos (10)
+  const sparklePos = [[8,12],[22,68],[45,8],[62,82],[78,18],[88,55],[15,42],[52,35],[72,72],[35,90]];
+  sparklePos.forEach(([l,t])=>{
+    const sp = document.createElement('div');
+    sp.className='sparkle';
+    sp.textContent='✦';
+    sp.style.cssText=`left:${l}%;top:${t}%;animation-delay:${(Math.random()*5).toFixed(1)}s;font-size:${Math.floor(Math.random()*8+8)}px`;
+    sf.appendChild(sp);
+  });
+
+  document.body.appendChild(sf);
+})();
+
+// ── GRAIN ──────────────────────────────────────────
+const cv=document.getElementById('grain');
+cv.width=cv.height=200;
+const gx=cv.getContext('2d');
+const gd=gx.createImageData(200,200);
+for(let i=0;i<gd.data.length;i+=4){const v=Math.random()*255;gd.data[i]=gd.data[i+1]=gd.data[i+2]=v;gd.data[i+3]=12}
+gx.putImageData(gd,0,0);
+cv.style.backgroundRepeat='repeat';
+cv.style.backgroundImage=`url(${cv.toDataURL()})`;
+cv.width=cv.height=0;
+
+// ── SLIDES ─────────────────────────────────────────
+const N=17;let cur=1,busy=false;
+const dotsEl=document.getElementById('dots');
+for(let i=1;i<=N;i++){const d=document.createElement('button');d.className='dot'+(i===1?' on':'');d.onclick=()=>goTo(i);dotsEl.appendChild(d)}
+
+function updNav(){
+  document.getElementById('nc').textContent=cur;
+  document.getElementById('bp').disabled=cur===1;
+  document.getElementById('bn').disabled=cur===N;
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i+1===cur));
+}
+
+function goTo(n){
+  if(busy||n===cur||n<1||n>N)return;
+  busy=true;
+  const prev=document.getElementById('s'+cur);
+  const next=document.getElementById('s'+n);
+  prev.classList.add('out');prev.classList.remove('active');
+  cur=n;updNav();
+  setTimeout(()=>{
+    prev.classList.remove('out');
+    next.classList.add('active');
+    triggerSlide(n);
+    busy=false;
+  },60);
+}
+function go(d){goTo(cur+d)}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(1)}
+  if(e.key==='ArrowLeft'){e.preventDefault();go(-1)}
+});
+let tx=null;
+document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+document.addEventListener('touchend',e=>{if(!tx)return;const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50)go(dx<0?1:-1);tx=null},{passive:true});
+
+// ── COUNT-UP ───────────────────────────────────────
+function countUp(el,target,dur=1000,fmt=false){
+  const start=performance.now();
+  function tick(t){
+    const p=Math.min((t-start)/dur,1);
+    const e2=1-Math.pow(1-p,3);
+    const v=Math.round(target*e2);
+    el.textContent=fmt?v.toLocaleString('es-ES',{maximumFractionDigits:0})+' €':v+(el.dataset.suffix||'');
+    if(p<1)requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+function triggerSlide(n){
+  const el=document.getElementById('s'+n);
+  // count-up for data-countup elements
+  el.querySelectorAll('[data-countup]').forEach(e=>{
+    const v=parseInt(e.dataset.countup);
+    const isMoney=e.dataset.format==='money';
+    countUp(e,v,1100,isMoney);
+  });
+  // calc init
+  if(n===8&&!calcDone){calcDone=true;initCalc()}
+}
+
+// ── CALCULATOR ─────────────────────────────────────
+let calcDone=false;
+function fmt(n){return n.toLocaleString('es-ES',{maximumFractionDigits:0})+' €'}
+
+function calc(){
+  const emp=+document.getElementById('se').value;
+  const hrs=+document.getElementById('sh').value;
+  const sal=+document.getElementById('ss').value;
+  document.getElementById('ve').textContent=emp;
+  document.getElementById('vh').textContent=hrs%1===0?hrs:hrs.toFixed(1);
+  document.getElementById('vs').textContent=sal.toLocaleString('es-ES');
+  const ce=sal*1.35,ch=ce/(20*8);
+  const cm=Math.round(emp*hrs*20*ch);
+  const ca=cm*12,fee=Math.round(ca*.25),ah=ca-fee;
+  document.getElementById('ra').textContent=fmt(cm);
+  document.getElementById('rm').textContent=fmt(ca);
+  document.getElementById('rf').textContent=fmt(Math.round(fee/12));
+  document.getElementById('rg').textContent=fmt(Math.round(ah/12))+' al mes · '+fmt(ah)+'/año';
+  document.getElementById('rr').textContent='300%';
+}
+function initCalc(){['se','sh','ss'].forEach(id=>document.getElementById(id).addEventListener('input',calc));calc()}
+
+updNav();
+
+// ── VARITA ──────────────────────────────────────────────────────
+// Varita: se crea en JS para garantizar que existe antes de usarse
+const wEl = (()=>{
+  const el = document.createElement('div');
+  el.id = 'wand-cur';
+  el.innerHTML = `<svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="9" cy="9" r="11" fill="rgba(245,158,11,.18)"/>
+    <path d="M9 1.5 L10.8 6.8 L16.5 6.8 L11.9 10.2 L13.7 15.5 L9 12 L4.3 15.5 L6.1 10.2 L1.5 6.8 L7.2 6.8 Z" fill="#F59E0B" stroke="#FCD34D" stroke-width=".5"/>
+    <line x1="14" y1="14" x2="45" y2="45" stroke="#c4a8ff" stroke-width="4" stroke-linecap="round"/>
+    <rect x="40" y="42" width="13" height="5" rx="2.5" fill="#7c3aed" transform="rotate(45 46.5 44.5)"/>
+    <line x1="17" y1="3" x2="21" y2="0" stroke="#FCD34D" stroke-width="2" stroke-linecap="round"/>
+    <line x1="3" y1="17" x2="0" y2="21" stroke="#FCD34D" stroke-width="2" stroke-linecap="round"/>
+    <line x1="18" y1="9" x2="23" y2="6" stroke="#FCD34D" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="9" y1="18" x2="6" y2="23" stroke="#FCD34D" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>`;
+  document.body.appendChild(el);
+  return el;
+})();
+document.addEventListener('mousemove', e => {
+  wEl.style.transform = 'translate(' + (e.clientX - 9) + 'px,' + (e.clientY - 9) + 'px)';
+}, {passive: true});
+
+function sparkBurst(x, y, big) {
+  const cols = ['#F59E0B','#FCD34D','#ffffff','#c4a8ff','#ff2d6b'];
+  const syms = ['✦','✧','★','·','✦'];
+  const n = big ? 22 : 10;
+  for (let i = 0; i < n; i++) {
+    const d = document.createElement('div');
+    d.className = 'sdot';
+    const sz = Math.random()*(big?10:5)+3;
+    const ang = (Math.PI*2/n)*i+(Math.random()-.5)*.5;
+    const dist = Math.random()*(big?110:50)+20;
+    d.style.cssText = `left:${x}px;top:${y}px;width:${sz}px;height:${sz}px;background:${cols[i%cols.length]};--tx:${Math.cos(ang)*dist}px;--ty:${Math.sin(ang)*dist}px;animation-delay:${Math.random()*0.08}s`;
+    document.body.appendChild(d);
+    setTimeout(()=>d.remove(), 800);
+  }
+  const ns = big ? 7 : 3;
+  for (let i = 0; i < ns; i++) {
+    const t = document.createElement('div');
+    t.className = 'stxt';
+    t.textContent = syms[Math.floor(Math.random()*syms.length)];
+    t.style.cssText = `left:${x+(Math.random()-.5)*100}px;top:${y+(Math.random()-.5)*70}px;font-size:${Math.random()*16+10}px;animation-delay:${Math.random()*0.15}s`;
+    document.body.appendChild(t);
+    setTimeout(()=>t.remove(), 950);
+  }
+  wEl.classList.add('flash');
+  setTimeout(()=>wEl.classList.remove('flash'), 280);
+}
+
+// Hover sobre números → iluminar con la varita
+function attachWandHover() {
+  document.querySelectorAll('.nums-veil').forEach(veil => {
+    veil.addEventListener('mouseenter', () => veil.classList.add('open'));
+    veil.addEventListener('mouseleave', () => veil.classList.remove('open'));
+  });
+}
+attachWandHover();
+
+// En cualquier slide: clic = chispas (efecto decorativo)
+document.addEventListener('click', e => {
+  sparkBurst(e.clientX, e.clientY, false);
+});
+
+document.addEventListener('touchstart', e => {
+  const t = e.touches[0];
+  sparkBurst(t.clientX, t.clientY, false);
+}, {passive:true});
+
+</script>
+
+</body>
+</html>
